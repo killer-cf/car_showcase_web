@@ -1,5 +1,5 @@
 import Image from 'next/image'
-import { fetchCars } from '../data/actions/fetch-cars'
+import { fetchCars } from '../../data/actions/fetch-cars'
 
 export default async function Home() {
   const data = await fetchCars()
