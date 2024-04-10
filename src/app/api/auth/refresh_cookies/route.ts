@@ -1,4 +1,4 @@
-import { KeycloakToken } from '@/app/data/types/keycloak-token'
+import { KeycloakToken } from '@/data/types/keycloak-token'
 import { env } from '@/env'
 import { User } from '@/stores/session'
 import { encrypt } from '@/utils/encryption'

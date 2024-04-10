@@ -3,8 +3,8 @@ import { jwtDecode } from 'jwt-decode'
 import { cookies } from 'next/headers'
 import { NextResponse, type NextRequest } from 'next/server'
 import { decrypt, encrypt } from './utils/encryption'
-import { KeycloakToken } from './app/data/types/keycloak-token'
-import { Session } from './app/data/types/session'
+import { KeycloakToken } from './data/types/keycloak-token'
+import { Session } from './data/types/session'
 
 async function refreshToken(refreshToken: string) {
   const resp = await fetch(`${env.REFRESH_TOKEN_URL}`, {

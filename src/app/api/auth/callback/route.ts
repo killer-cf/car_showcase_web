@@ -3,8 +3,8 @@ import { NextResponse } from 'next/server'
 import { env } from '@/env'
 import { encrypt } from '@/utils/encryption'
 import { jwtDecode } from 'jwt-decode'
-import { KeycloakToken } from '@/app/data/types/keycloak-token'
-import { Session } from '@/app/data/types/session'
+import { KeycloakToken } from '@/data/types/keycloak-token'
+import { Session } from '@/data/types/session'
 
 export async function GET(request: Request) {
   const { searchParams, origin } = new URL(request.url)
