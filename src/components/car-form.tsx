@@ -24,7 +24,6 @@ import { Input } from '@/components/ui/input'
 import { useEffect, useState } from 'react'
 import { toast } from 'react-toastify'
 import { ImageInput } from '@/components/image-input'
-// import { useRouter } from 'next/navigation'
 import { Car } from '@/data/types/car'
 import { Brand } from '@/data/types/brand'
 import { Model } from '@/data/types/model'
@@ -45,12 +44,13 @@ const createCarFormSchema = z.object({
     .transform((value) => value.replace(/[^0-9]/g, ''))
     .refine((value) => !isNaN(Number(value)), {
       message: 'Quilometragem nao deve conter letras',
-    }),
+    })
+    .transform((value) => Number(value)),
   year: z.coerce.number().positive(),
   used: z.boolean(),
   brand: z.string(),
   model: z.string(),
-  images: z.instanceof(File),
+  images: z.instanceof(FileList),
 })
 
 const editCarFormSchema = createCarFormSchema.omit({
@@ -88,101 +88,46 @@ export function CarForm({ isEditing = false, car }: CarFormProps) {
   const [models, setModels] = useState<Model[]>([])
   const selectedBranchId = form.watch('brand')
 
-  // const router = useRouter()
-
   async function handleCreateCar(data: CarForm) {
-    console.log(data)
-    // try {
-    //   const formData = new FormData()
-    //   formData.append('file', data.images)
-    //   const response = await api('/images', {
-    //     method: 'POST',
-    //     body: formData,
-    //   })
-    //   const responseJson = await response.json()
-    //   const responseData = responseJson.data
-    //   if (response.ok) {
-    //     const car = {
-    //       name: data.name,
-    //       price: data.price,
-    //       description: data.description,
-    //       status: data.status,
-    //       categoriesIds: data.categoryIds,
-    //       optionsGroup: data.optionsGroup,
-    //       imageId: responseData.imageId,
-    //     }
-    //     const carResponse = await fetch('/api/cars', {
-    //       method: 'POST',
-    //       body: JSON.stringify(car),
-    //     })
-    //     const carResponseJson = await carResponse.json()
-    //     const carResponseData = carResponseJson.data
-    //     console.log(carResponseJson)
-    //     if (carResponseJson.status === 201) {
-    //       toast.success('Produto cadastrado com sucesso!')
-    //       form.reset()
-    //       setMarkedCategories([])
-    //     } else {
-    //       toast.error(
-    //         `Falha ao processar a requisição! ${carResponseData.message}`,
-    //       )
-    //     }
-    //   } else {
-    //     toast.error('Falha ao fazer upload da imagem!')
-    //   }
-    // } catch (error) {
-    //   console.log(error)
-    //   toast.error('Falha ao processar a requisição!')
-    // }
+    try {
+      const formData = new FormData()
+
+      for (let i = 0; i < data.images.length; i++) {
+        formData.append(`car[images][]`, data.images[i])
+      }
+
+      formData.append('car[name]', data.name)
+      formData.append('car[price]', String(data.price))
+      formData.append('car[year]', String(data.year))
+      formData.append('car[km]', String(data.km))
+      formData.append('car[used]', String(data.used))
+      formData.append('car[brand_id]', data.brand)
+      formData.append('car[model_id]', data.model)
+
+      const response = await fetch('/api/cars', {
+        method: 'POST',
+        body: formData,
+      })
+        .then((res) => res.json())
+        .then((res) => res.data)
+
+      if (response.status === 201) {
+        form.reset()
+        toast.success('Produto cadastrado com sucesso!')
+      } else if (response.status === 500) {
+        toast.error(`Erro de servidor`)
+      } else if (response.status === 422) {
+        console.log(response)
+        // form.setError()
+      }
+    } catch (error) {
+      console.log(error)
+      toast.error('Falha ao processar a requisição!')
+    }
   }
 
   async function handleEditCar(data: CarForm) {
     console.log(data)
-    // if (!car) return
-    // try {
-    //   // const formData = new FormData()
-    //   // formData.append('file', data.image)
-    //   // const response = await fetch('http://localhost:3333/images', {
-    //   //   method: 'POST',
-    //   //   headers: {
-    //   //     Authorization: `Bearer ${session?.data?.access_token}`,
-    //   //   },
-    //   //   body: formData,
-    //   //   cache: 'no-store',
-    //   // })
-    //   // const responseData = await response.json()
-    //   // if (response.ok) {
-    //   const editedCar = {
-    //     name: data.name,
-    //     price: data.price,
-    //     description: data.description,
-    //     categoriesIds: data.categoryIds,
-    //     optionsGroup: data.optionsGroup,
-    //     // imageId: responseData.imageId,
-    //   }
-    //   const carResponse = await fetch(`/api/cars/${car.id}`, {
-    //     method: 'PUT',
-    //     body: JSON.stringify(editedCar),
-    //   })
-    //   const carResponseJson = await carResponse.json()
-    //   const carResponseData = carResponseJson.data
-    //   if (carResponseJson.status === 204) {
-    //     form.reset()
-    //     router.replace(`/${code}/produto/${car.id}`)
-    //     router.refresh()
-    //     toast.success('Produto editado com sucesso!')
-    //   } else {
-    //     toast.error(
-    //       `Falha ao processar a requisição! ${carResponseData.message}`,
-    //     )
-    //   }
-    //   // } else {
-    //   //   toast.error('Falha ao fazer upload da imagem!')
-    //   // }
-    // } catch (error) {
-    //   console.log(error)
-    //   toast.error('Falha ao processar a requisição!')
-    // }
   }
 
   async function onSubmit(data: CarForm) {
@@ -339,11 +284,12 @@ export function CarForm({ isEditing = false, car }: CarFormProps) {
                   </SelectTrigger>
                 </FormControl>
                 <SelectContent>
-                  {brands.map((brand) => (
-                    <SelectItem key={brand.id} value={brand.id}>
-                      {brand.name}
-                    </SelectItem>
-                  ))}
+                  {brands?.length > 0 &&
+                    brands.map((brand) => (
+                      <SelectItem key={brand.id} value={brand.id}>
+                        {brand.name}
+                      </SelectItem>
+                    ))}
                 </SelectContent>
               </Select>
               <FormMessage />

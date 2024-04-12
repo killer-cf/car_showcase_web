@@ -2,12 +2,12 @@ import Image from 'next/image'
 import { useState, ChangeEvent, useMemo, useEffect } from 'react'
 
 interface ImageInputProps {
-  onFileSelected: (file: File) => void
+  onFileSelected: (files: FileList) => void
   isSubmitted?: boolean
 }
 
 export function ImageInput({ onFileSelected, isSubmitted }: ImageInputProps) {
-  const [imgFile, setImgFile] = useState<File | null>(null)
+  const [imgFiles, setImgFiles] = useState<FileList | null>(null)
 
   function handleFileSelected(event: ChangeEvent<HTMLInputElement>) {
     const { files } = event.currentTarget
@@ -16,25 +16,23 @@ export function ImageInput({ onFileSelected, isSubmitted }: ImageInputProps) {
       return
     }
 
-    const selectedFiles = files[0]
-
-    setImgFile(selectedFiles)
-    onFileSelected(selectedFiles)
+    setImgFiles(files)
+    onFileSelected(files)
   }
-  const previewURL = useMemo(() => {
-    if (!imgFile) {
+  const previewURLs = useMemo(() => {
+    if (!imgFiles) {
       return null
     }
 
-    return URL.createObjectURL(imgFile)
-  }, [imgFile])
+    return Array.from(imgFiles).map((file) => URL.createObjectURL(file))
+  }, [imgFiles])
 
   useEffect(() => {
     if (!isSubmitted) {
       return
     }
 
-    setImgFile(null)
+    setImgFiles(null)
   }, [isSubmitted])
 
   return (
@@ -43,16 +41,19 @@ export function ImageInput({ onFileSelected, isSubmitted }: ImageInputProps) {
         htmlFor="image"
         className="relative border border-zinc-800 flex rounded-md aspect-video cursor-pointer border-dashed text-sm flex-col gap-2 items-center justify-center text-muted-foreground hover:bg-white/5"
       >
-        {previewURL ? (
-          <Image
-            src={previewURL}
-            className="absolute inset-0 w-full h-full rounded-md"
-            alt=""
-            width={150}
-            height={150}
-          />
+        {previewURLs ? (
+          previewURLs.map((url, index) => (
+            <Image
+              key={index}
+              src={url}
+              className="absolute inset-0 w-full h-full rounded-md"
+              alt=""
+              width={150}
+              height={150}
+            />
+          ))
         ) : (
-          <>Selecione uma imagem</>
+          <>Selecione ate 5 imagens</>
         )}
       </label>
       <input
@@ -61,6 +62,7 @@ export function ImageInput({ onFileSelected, isSubmitted }: ImageInputProps) {
         accept="image/jpeg,image/png"
         className="sr-only"
         onChange={handleFileSelected}
+        multiple
       />
     </div>
   )
