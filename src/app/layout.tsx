@@ -3,6 +3,7 @@ import { Inter as FontSans } from 'next/font/google'
 import './globals.css'
 import SessionProvider from './providers/session-provider'
 import { cn } from '@/lib/utils'
+import { ToastContainer } from 'react-toastify'
 
 const fontSans = FontSans({
   subsets: ['latin'],
@@ -29,6 +30,20 @@ export default function RootLayout({
           )}
         >
           {children}
+          <div className="absolute top-0 right-0 ">
+            <ToastContainer
+              position="top-right"
+              autoClose={5000}
+              hideProgressBar={false}
+              newestOnTop={false}
+              closeOnClick
+              rtl={false}
+              pauseOnFocusLoss
+              draggable
+              pauseOnHover
+              theme="dark"
+            />
+          </div>
         </body>
       </SessionProvider>
     </html>
