@@ -2,12 +2,12 @@ import Image from 'next/image'
 import { useState, ChangeEvent, useMemo, useEffect } from 'react'
 
 interface ImageInputProps {
-  onFileSelected: (files: FileList) => void
+  onFileSelected: (files: File[]) => void
   isSubmitted?: boolean
 }
 
 export function ImageInput({ onFileSelected, isSubmitted }: ImageInputProps) {
-  const [imgFiles, setImgFiles] = useState<FileList | null>(null)
+  const [imgFiles, setImgFiles] = useState<File[] | null>(null)
 
   function handleFileSelected(event: ChangeEvent<HTMLInputElement>) {
     const { files } = event.currentTarget
@@ -16,8 +16,8 @@ export function ImageInput({ onFileSelected, isSubmitted }: ImageInputProps) {
       return
     }
 
-    setImgFiles(files)
-    onFileSelected(files)
+    setImgFiles(Array.from(files))
+    onFileSelected(Array.from(files))
   }
   const previewURLs = useMemo(() => {
     if (!imgFiles) {

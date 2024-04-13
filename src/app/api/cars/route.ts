@@ -18,5 +18,5 @@ export async function POST(request: Request) {
     },
   }).then((res) => res.json())
 
-  return Response.json({ status: response.status })
+  return Response.json({ status: response.status, data: response.data })
 }

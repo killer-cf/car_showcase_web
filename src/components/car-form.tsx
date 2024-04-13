@@ -50,7 +50,7 @@ const createCarFormSchema = z.object({
   used: z.boolean(),
   brand: z.string(),
   model: z.string(),
-  images: z.instanceof(FileList),
+  images: z.array(z.instanceof(File)),
 })
 
 const editCarFormSchema = createCarFormSchema.omit({
@@ -107,9 +107,7 @@ export function CarForm({ isEditing = false, car }: CarFormProps) {
       const response = await fetch('/api/cars', {
         method: 'POST',
         body: formData,
-      })
-        .then((res) => res.json())
-        .then((res) => res.data)
+      }).then((res) => res.json())
 
       if (response.status === 201) {
         form.reset()

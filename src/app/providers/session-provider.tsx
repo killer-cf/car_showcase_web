@@ -53,5 +53,5 @@ export default function SessionProvider({
     checkSession()
   }, [cookies, clearSession, setSession, router, refreshSession])
 
-  return <div>{children}</div>
+  return children
 }
