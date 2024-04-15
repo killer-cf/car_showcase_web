@@ -10,7 +10,7 @@ export default async function Home() {
       <div>Cars page</div>
       <div>
         {data.cars?.map((car) => (
-          <div key={car.id}>
+          <div key={car.id} className="py-5">
             <Image
               src={car.images[0].url}
               alt={car.name}
