@@ -5,6 +5,7 @@ import SessionProvider from './providers/session-provider'
 import { cn } from '@/lib/utils'
 import { ToastContainer } from 'react-toastify'
 import localFont from 'next/font/local'
+import { Header } from '@/components/header'
 
 const fontSans = FontSans({
   subsets: ['latin'],
@@ -53,7 +54,10 @@ export default function RootLayout({
             fontApercu.variable,
           )}
         >
-          {children}
+          <div>
+            <Header />
+            {children}
+          </div>
           <div className="absolute top-0 right-0 ">
             <ToastContainer
               position="top-right"
