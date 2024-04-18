@@ -3,11 +3,12 @@ import { CarForm } from '@/components/car-form'
 
 export default async function NewCarPage() {
   return (
-    <div className="flex flex-col gap-8 p-24">
-      <h1 className="font-bold text-2xl p-5">Cadastro de Carro</h1>
-      <div className="flex gap-6">
+    <div className="flex flex-col gap-4 mt-5 max-w-6xl m-auto mb-20">
+      <div className="flex">
         <BackButton />
       </div>
+
+      <h1 className="font-bold text-4xl text-center">Novo carro</h1>
 
       <CarForm />
     </div>

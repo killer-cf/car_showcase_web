@@ -169,166 +169,174 @@ export function CarForm({ isEditing = false, car }: CarFormProps) {
   }, [selectedBranchId])
 
   return (
-    <Form {...form}>
-      <form
-        onSubmit={form.handleSubmit(onSubmit)}
-        className="space-y-5 max-w-[500px]"
-      >
-        {!isEditing && (
-          <>
-            <FormLabel>Imagens</FormLabel>
-            <ImageInput
-              onFileSelected={(value) => form.setValue('images', value)}
-              isSubmitted={form.formState.isSubmitSuccessful}
-            />
-            {form.formState.errors.images && (
-              <p className="text-sm text-red-900 mt-1">
-                {form.formState.errors.images.message}
-              </p>
-            )}
-          </>
-        )}
-
-        <FormField
-          name="name"
-          control={form.control}
-          render={({ field }) => (
-            <FormItem>
-              <FormLabel>Titulo</FormLabel>
-              <FormControl>
-                <Input type="text" {...field} />
-              </FormControl>
-              <FormMessage />
-            </FormItem>
-          )}
-        />
-
-        <FormField
-          name="price"
-          control={form.control}
-          render={({ field }) => (
-            <FormItem>
-              <FormLabel>Preço</FormLabel>
-              <FormControl>
-                <Input type="text" {...field} />
-              </FormControl>
-              <FormDescription>
-                Preço com duas casas decimais, ex: 10,00
-              </FormDescription>
-              <FormMessage />
-            </FormItem>
-          )}
-        />
-
-        <FormField
-          name="year"
-          control={form.control}
-          render={({ field }) => (
-            <FormItem>
-              <FormLabel>Ano</FormLabel>
-              <FormControl>
-                <Input type="number" {...field} />
-              </FormControl>
-              <FormMessage />
-            </FormItem>
-          )}
-        />
-
-        <FormField
-          name="km"
-          control={form.control}
-          render={({ field }) => (
-            <FormItem>
-              <FormLabel>Quilometragem</FormLabel>
-              <FormControl>
-                <Input type="text" {...field} />
-              </FormControl>
-              <FormMessage />
-            </FormItem>
-          )}
-        />
-
-        <FormField
-          control={form.control}
-          name="used"
-          render={({ field }) => (
-            <FormItem className="flex flex-row items-center justify-between rounded-lg border p-3 shadow-sm">
-              <div className="space-y-0.5">
-                <FormLabel>Carro usado</FormLabel>
-                <FormDescription>
-                  Receive emails about your account security.
-                </FormDescription>
-              </div>
-              <FormControl>
-                <Switch
-                  checked={field.value}
-                  onCheckedChange={field.onChange}
-                />
-              </FormControl>
-            </FormItem>
-          )}
-        />
-
-        <FormField
-          name="brand"
-          control={form.control}
-          render={({ field }) => (
-            <FormItem>
-              <FormLabel>Marca</FormLabel>
-              <Select onValueChange={field.onChange} defaultValue={field.value}>
-                <FormControl>
-                  <SelectTrigger>
-                    <SelectValue />
-                  </SelectTrigger>
-                </FormControl>
-                <SelectContent>
-                  {brands?.length > 0 &&
-                    brands.map((brand) => (
-                      <SelectItem key={brand.id} value={brand.id}>
-                        {brand.name}
-                      </SelectItem>
-                    ))}
-                </SelectContent>
-              </Select>
-              <FormMessage />
-            </FormItem>
-          )}
-        />
-
-        <FormField
-          name="model"
-          control={form.control}
-          render={({ field }) => (
-            <FormItem>
-              <FormLabel>Modelo</FormLabel>
-              <Select onValueChange={field.onChange} defaultValue={field.value}>
-                <FormControl>
-                  <SelectTrigger>
-                    <SelectValue />
-                  </SelectTrigger>
-                </FormControl>
-                <SelectContent>
-                  {models?.length > 0 &&
-                    models.map((model) => (
-                      <SelectItem key={model.id} value={model.id}>
-                        {model.name}
-                      </SelectItem>
-                    ))}
-                </SelectContent>
-              </Select>
-              <FormMessage />
-            </FormItem>
-          )}
-        />
-
-        <Button
-          type="submit"
-          disabled={form.formState.isSubmitting}
-          variant="secondary"
+    <div className="flex justify-center">
+      <Form {...form}>
+        <form
+          onSubmit={form.handleSubmit(onSubmit)}
+          className="space-y-5 w-[600px] p-16 rounded-xl"
         >
-          {isEditing ? 'Editar anuncio' : 'Cadastrar anuncio'}
-        </Button>
-      </form>
-    </Form>
+          {!isEditing && (
+            <>
+              <FormLabel className="text-lg">Imagens</FormLabel>
+              <ImageInput
+                onFileSelected={(value) => form.setValue('images', value)}
+                isSubmitted={form.formState.isSubmitSuccessful}
+              />
+              {form.formState.errors.images && (
+                <p className="text-sm text-red-900 mt-1">
+                  {form.formState.errors.images.message}
+                </p>
+              )}
+            </>
+          )}
+
+          <FormField
+            name="name"
+            control={form.control}
+            render={({ field }) => (
+              <FormItem>
+                <FormLabel className="text-lg">Titulo</FormLabel>
+                <FormControl>
+                  <Input type="text" {...field} />
+                </FormControl>
+                <FormMessage />
+              </FormItem>
+            )}
+          />
+
+          <FormField
+            name="price"
+            control={form.control}
+            render={({ field }) => (
+              <FormItem>
+                <FormLabel className="text-lg">Preço</FormLabel>
+                <FormControl>
+                  <Input type="text" {...field} />
+                </FormControl>
+                <FormDescription>
+                  Preço com duas casas decimais, ex: 10,00
+                </FormDescription>
+                <FormMessage />
+              </FormItem>
+            )}
+          />
+
+          <FormField
+            name="year"
+            control={form.control}
+            render={({ field }) => (
+              <FormItem>
+                <FormLabel className="text-lg">Ano</FormLabel>
+                <FormControl>
+                  <Input type="number" {...field} />
+                </FormControl>
+                <FormMessage />
+              </FormItem>
+            )}
+          />
+
+          <FormField
+            name="km"
+            control={form.control}
+            render={({ field }) => (
+              <FormItem>
+                <FormLabel className="text-lg">Quilometragem</FormLabel>
+                <FormControl>
+                  <Input type="text" {...field} />
+                </FormControl>
+                <FormMessage />
+              </FormItem>
+            )}
+          />
+
+          <FormField
+            control={form.control}
+            name="used"
+            render={({ field }) => (
+              <FormItem className="flex flex-row items-center justify-between rounded-lg border p-3 shadow-sm">
+                <div className="space-y-0.5">
+                  <FormLabel className="text-lg">Carro usado</FormLabel>
+                  <FormDescription>
+                    Receive emails about your account security.
+                  </FormDescription>
+                </div>
+                <FormControl>
+                  <Switch
+                    checked={field.value}
+                    onCheckedChange={field.onChange}
+                  />
+                </FormControl>
+              </FormItem>
+            )}
+          />
+
+          <FormField
+            name="brand"
+            control={form.control}
+            render={({ field }) => (
+              <FormItem>
+                <FormLabel className="text-lg">Marca</FormLabel>
+                <Select
+                  onValueChange={field.onChange}
+                  defaultValue={field.value}
+                >
+                  <FormControl>
+                    <SelectTrigger>
+                      <SelectValue />
+                    </SelectTrigger>
+                  </FormControl>
+                  <SelectContent>
+                    {brands?.length > 0 &&
+                      brands.map((brand) => (
+                        <SelectItem key={brand.id} value={brand.id}>
+                          {brand.name}
+                        </SelectItem>
+                      ))}
+                  </SelectContent>
+                </Select>
+                <FormMessage />
+              </FormItem>
+            )}
+          />
+
+          <FormField
+            name="model"
+            control={form.control}
+            render={({ field }) => (
+              <FormItem>
+                <FormLabel className="text-lg">Modelo</FormLabel>
+                <Select
+                  onValueChange={field.onChange}
+                  defaultValue={field.value}
+                >
+                  <FormControl>
+                    <SelectTrigger>
+                      <SelectValue />
+                    </SelectTrigger>
+                  </FormControl>
+                  <SelectContent>
+                    {models?.length > 0 &&
+                      models.map((model) => (
+                        <SelectItem key={model.id} value={model.id}>
+                          {model.name}
+                        </SelectItem>
+                      ))}
+                  </SelectContent>
+                </Select>
+                <FormMessage />
+              </FormItem>
+            )}
+          />
+
+          <Button
+            type="submit"
+            disabled={form.formState.isSubmitting}
+            variant="default"
+          >
+            {isEditing ? 'Editar anuncio' : 'Cadastrar anuncio'}
+          </Button>
+        </form>
+      </Form>
+    </div>
   )
 }
