@@ -181,6 +181,7 @@ export function CarForm({ isEditing = false, car }: CarFormProps) {
               <ImageInput
                 onFileSelected={(value) => form.setValue('images', value)}
                 isSubmitted={form.formState.isSubmitSuccessful}
+                limit={5}
               />
               {form.formState.errors.images && (
                 <p className="text-sm text-red-900 mt-1">
