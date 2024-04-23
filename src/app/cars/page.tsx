@@ -1,6 +1,4 @@
-import { fetchCars } from '../../data/actions/fetch-cars'
 import { CarCard } from '@/components/car-card'
-import { Filters } from './components/filters'
 import {
   Select,
   SelectContent,
@@ -8,6 +6,9 @@ import {
   SelectTrigger,
   SelectValue,
 } from '@/components/ui/select'
+
+import { fetchCars } from '../../data/actions/fetch-cars'
+import { Filters } from './components/filters'
 
 export default async function CarsPage() {
   const data = await fetchCars()

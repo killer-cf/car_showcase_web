@@ -1,7 +1,8 @@
 'use client'
 
-import { useSession, useSessionStore } from '@/stores/session'
 import { useRouter } from 'next/navigation'
+
+import { useSession, useSessionStore } from '@/stores/session'
 
 export default function AuthStatus() {
   const session = useSession()

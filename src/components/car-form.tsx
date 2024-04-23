@@ -1,8 +1,12 @@
 'use client'
 
 import { zodResolver } from '@hookform/resolvers/zod'
+import { useEffect, useState } from 'react'
 import { useForm } from 'react-hook-form'
+import { toast } from 'react-toastify'
 import { z } from 'zod'
+
+import { ImageInput } from '@/components/image-input'
 import { Button } from '@/components/ui/button'
 import {
   Form,
@@ -13,6 +17,7 @@ import {
   FormLabel,
   FormMessage,
 } from '@/components/ui/form'
+import { Input } from '@/components/ui/input'
 import {
   Select,
   SelectContent,
@@ -20,15 +25,12 @@ import {
   SelectTrigger,
   SelectValue,
 } from '@/components/ui/select'
-import { Input } from '@/components/ui/input'
-import { useEffect, useState } from 'react'
-import { toast } from 'react-toastify'
-import { ImageInput } from '@/components/image-input'
-import { Car } from '@/data/types/car'
-import { Brand } from '@/data/types/brand'
-import { Model } from '@/data/types/model'
-import { Switch } from './ui/switch'
 import { api } from '@/data/api'
+import { Brand } from '@/data/types/brand'
+import { Car } from '@/data/types/car'
+import { Model } from '@/data/types/model'
+
+import { Switch } from './ui/switch'
 
 const createCarFormSchema = z.object({
   name: z.string().min(3, 'Nome é obrigatório, informe no mínimo 3 caracteres'),

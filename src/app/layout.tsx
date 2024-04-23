@@ -1,11 +1,14 @@
+import './globals.css'
+
 import type { Metadata } from 'next'
 import { Inter as FontSans } from 'next/font/google'
-import './globals.css'
-import SessionProvider from './providers/session-provider'
-import { cn } from '@/lib/utils'
-import { ToastContainer } from 'react-toastify'
 import localFont from 'next/font/local'
+import { ToastContainer } from 'react-toastify'
+
 import { Header } from '@/components/header'
+import { cn } from '@/lib/utils'
+
+import SessionProvider from './providers/session-provider'
 
 const fontSans = FontSans({
   subsets: ['latin'],

@@ -1,4 +1,5 @@
 import { DataTable } from '@/components/data-table'
+
 import { fetchBrands } from '../../data/actions/fetch-brands'
 import { brandsColumns } from './components/brands-columns'
 

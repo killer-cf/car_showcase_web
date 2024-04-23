@@ -1,8 +1,10 @@
-import Image from 'next/image'
 import { MapPinIcon } from 'lucide-react'
+import Image from 'next/image'
+
 import { Car } from '@/data/types/car'
-import { Button } from './ui/button'
 import { formatCurrency } from '@/utils/format-currency'
+
+import { Button } from './ui/button'
 
 interface CarCardProps {
   car: Car

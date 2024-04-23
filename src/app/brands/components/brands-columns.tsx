@@ -1,10 +1,9 @@
 'use client'
 
-import { Brand } from '@/data/types/brand'
 import { ColumnDef } from '@tanstack/react-table'
-import { ReactNode } from 'react'
 import { format } from 'date-fns'
 import { MoreHorizontal } from 'lucide-react'
+import { ReactNode } from 'react'
 
 import { Button } from '@/components/ui/button'
 import {
@@ -14,6 +13,7 @@ import {
   DropdownMenuLabel,
   DropdownMenuTrigger,
 } from '@/components/ui/dropdown-menu'
+import { Brand } from '@/data/types/brand'
 
 const Header = ({ children }: { children: ReactNode }) => (
   <div className="text-center font-bold">{children}</div>

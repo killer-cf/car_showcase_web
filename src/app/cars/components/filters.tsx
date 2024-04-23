@@ -1,5 +1,4 @@
 import { Button } from '@/components/ui/button'
-import { Tag } from './tag'
 import {
   Select,
   SelectContent,
@@ -7,7 +6,9 @@ import {
   SelectTrigger,
   SelectValue,
 } from '@/components/ui/select'
+
 import { ModelsFilter } from './models-filter'
+import { Tag } from './tag'
 
 export function Filters() {
   return (

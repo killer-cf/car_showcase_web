@@ -1,10 +1,12 @@
-import { env } from '@/env'
 import { jwtDecode } from 'jwt-decode'
 import { cookies } from 'next/headers'
-import { NextResponse, type NextRequest } from 'next/server'
-import { decrypt, encrypt } from './utils/encryption'
+import { type NextRequest, NextResponse } from 'next/server'
+
+import { env } from '@/env'
+
 import { KeycloakToken } from './data/types/keycloak-token'
 import { Session } from './data/types/session'
+import { decrypt, encrypt } from './utils/encryption'
 
 async function refreshToken(refreshToken: string) {
   const resp = await fetch(`${env.REFRESH_TOKEN_URL}`, {
