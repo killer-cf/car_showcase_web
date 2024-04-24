@@ -8,7 +8,7 @@ import { Button } from './ui/button'
 export function Header() {
   return (
     <header className="flex items-center bg-background max-w-6xl m-auto">
-      <Image src={Logo} width={90} height={90} alt="logo" />
+      <Image src={Logo} width={70} height={70} alt="logo" />
       <nav className="flex gap-3 justify-between w-full">
         <div className="flex gap-3">
           <Button variant="link" className="text-md">
