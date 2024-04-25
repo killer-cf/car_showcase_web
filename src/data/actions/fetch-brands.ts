@@ -9,13 +9,19 @@ type ResponseData = {
   message: string
 }
 
-export async function fetchBrands(): Promise<ResponseData> {
+export async function fetchBrands(
+  page: number = 1,
+  perPage: number = 20,
+): Promise<ResponseData> {
   try {
-    const response = await api('api/v1/brands', {
-      next: {
-        tags: ['Brands'],
+    const response = await api(
+      `api/v1/brands?page=${page}&per_page=${perPage}`,
+      {
+        next: {
+          tags: ['Brands'],
+        },
       },
-    }).then((res) => res.json())
+    ).then((res) => res.json())
 
     if (response.status === 200) {
       return {
