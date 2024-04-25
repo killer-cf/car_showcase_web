@@ -1,4 +1,7 @@
+import { redirect } from 'next/navigation'
+
 import { CarCard } from '@/components/car-card'
+import { Pagination } from '@/components/pagination'
 import {
   Select,
   SelectContent,
@@ -10,10 +13,19 @@ import {
 import { fetchCars } from '../../data/actions/fetch-cars'
 import { Filters } from './components/filters'
 
-export default async function CarsPage() {
-  const data = await fetchCars()
+interface CarsPageProps {
+  searchParams: {
+    page: number
+  }
+}
 
-  console.log(data.cars)
+export default async function CarsPage({ searchParams }: CarsPageProps) {
+  const { cars, meta } = await fetchCars(searchParams.page, 5)
+
+  if (meta && searchParams.page > meta.total_pages) {
+    redirect('/cars')
+  }
+
   return (
     <main className="flex min-h-screen flex-col items-center max-w-6xl m-auto">
       <div className="flex my-8 gap-8">
@@ -39,10 +51,21 @@ export default async function CarsPage() {
         </Select>
       </div>
 
-      <div className="flex gap-4 mt-5">
+      <div className="flex gap-4 mt-5 mb-20">
         <Filters />
-        <div className="space-y-5">
-          {data.cars?.map((car) => <CarCard car={car} key={car.id} />)}
+        <div className="">
+          {cars?.map((car) => <CarCard car={car} key={car.id} />)}
+
+          {meta && (
+            <div className="mt-14">
+              <Pagination
+                currentPage={meta.current_page}
+                nextPage={meta.next_page}
+                prevPage={meta.prev_page}
+                pageLink={'/cars'}
+              />
+            </div>
+          )}
         </div>
       </div>
     </main>
