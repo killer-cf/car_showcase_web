@@ -1,8 +1,10 @@
 import { api } from '../api'
 import { Brand } from '../types/brand'
+import { Metadata } from '../types/metadata'
 
 type ResponseData = {
   brands: Brand[]
+  meta?: Metadata
   statusCode: number
   message: string
 }
@@ -17,7 +19,8 @@ export async function fetchBrands(): Promise<ResponseData> {
 
     if (response.status === 200) {
       return {
-        brands: response.data,
+        brands: response.data.brands,
+        meta: response.data.meta,
         statusCode: response.status,
         message: 'OK',
       }
