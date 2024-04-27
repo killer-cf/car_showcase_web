@@ -6,10 +6,10 @@ import {
   SelectTrigger,
   SelectValue,
 } from '@/components/ui/select'
-import { getKms } from '@/utils/get-kms'
 import { getPrices } from '@/utils/get-prices'
 import { getYears } from '@/utils/get-years'
 
+import KmFilter from './km-filter'
 import { ModelsFilter } from './models-filter'
 import { Tag } from './tag'
 
@@ -140,24 +140,7 @@ export function Filters() {
         </div>
       </div>
 
-      <div className="px-4 py-6 border-b-2">
-        <p className="mb-4">Quilometragem</p>
-        <Select>
-          <SelectTrigger className="text-black bg-background">
-            <SelectValue placeholder="Qualquer" />
-          </SelectTrigger>
-          <SelectContent>
-            <SelectItem key={'qualquer'} value={'qualquer'}>
-              Qualquer
-            </SelectItem>
-            {getKms().map((km) => (
-              <SelectItem key={km} value={km.toString()}>
-                {km} ou menor
-              </SelectItem>
-            ))}
-          </SelectContent>
-        </Select>
-      </div>
+      <KmFilter />
 
       <div className="px-4 py-6 border-b-2">
         <p className="mb-4">Ano</p>
