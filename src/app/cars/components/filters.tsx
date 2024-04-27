@@ -6,6 +6,9 @@ import {
   SelectTrigger,
   SelectValue,
 } from '@/components/ui/select'
+import { getKms } from '@/utils/get-kms'
+import { getPrices } from '@/utils/get-prices'
+import { getYears } from '@/utils/get-years'
 
 import { ModelsFilter } from './models-filter'
 import { Tag } from './tag'
@@ -109,15 +112,14 @@ export function Filters() {
               <SelectValue placeholder="Min" />
             </SelectTrigger>
             <SelectContent>
-              <SelectItem key={'id-aqui'} value={'id-aqui'}>
-                R$ 1.000,00
+              <SelectItem key={'no-limit'} value={'no-limit'}>
+                Sem limite
               </SelectItem>
-              <SelectItem key={'id-aqui-1'} value={'id-aqui-1'}>
-                R$ 5.000,00
-              </SelectItem>
-              <SelectItem key={'id-aqui-2'} value={'id-aqui-2'}>
-                R$ 10.000,00
-              </SelectItem>
+              {getPrices().map((price) => (
+                <SelectItem key={price} value={price}>
+                  {price}
+                </SelectItem>
+              ))}
             </SelectContent>
           </Select>
           <Select>
@@ -125,15 +127,14 @@ export function Filters() {
               <SelectValue placeholder="Max" />
             </SelectTrigger>
             <SelectContent>
-              <SelectItem key={'id-aqui'} value={'id-aqui'}>
-                R$ 20.000,00
+              <SelectItem key={'no-limit'} value={'no-limit'}>
+                Sem limite
               </SelectItem>
-              <SelectItem key={'id-aqui-1'} value={'id-aqui-1'}>
-                R$ 50.000,00
-              </SelectItem>
-              <SelectItem key={'id-aqui-2'} value={'id-aqui-2'}>
-                R$ 100.000,00
-              </SelectItem>
+              {getPrices().map((price) => (
+                <SelectItem key={price} value={price}>
+                  {price}
+                </SelectItem>
+              ))}
             </SelectContent>
           </Select>
         </div>
@@ -146,18 +147,14 @@ export function Filters() {
             <SelectValue placeholder="Qualquer" />
           </SelectTrigger>
           <SelectContent>
-            <SelectItem key={'id-aqui'} value={'id-aqui'}>
+            <SelectItem key={'qualquer'} value={'qualquer'}>
               Qualquer
             </SelectItem>
-            <SelectItem key={'id-aqui-1'} value={'id-aqui-1'}>
-              10.000 ou menor
-            </SelectItem>
-            <SelectItem key={'id-aqui-2'} value={'id-aqui-2'}>
-              10.000 ou menor
-            </SelectItem>
-            <SelectItem key={'id-aqui-2'} value={'id-aqui-2'}>
-              30.000 ou menor
-            </SelectItem>
+            {getKms().map((km) => (
+              <SelectItem key={km} value={km.toString()}>
+                {km} ou menor
+              </SelectItem>
+            ))}
           </SelectContent>
         </Select>
       </div>
@@ -170,15 +167,11 @@ export function Filters() {
               <SelectValue placeholder="Min" />
             </SelectTrigger>
             <SelectContent>
-              <SelectItem key={'id-aqui'} value={'id-aqui'}>
-                2018
-              </SelectItem>
-              <SelectItem key={'id-aqui-1'} value={'id-aqui-1'}>
-                2019
-              </SelectItem>
-              <SelectItem key={'id-aqui-2'} value={'id-aqui-2'}>
-                2020
-              </SelectItem>
+              {getYears().map((year) => (
+                <SelectItem key={year} value={year.toString()}>
+                  {year}
+                </SelectItem>
+              ))}
             </SelectContent>
           </Select>
           <Select>
@@ -186,15 +179,11 @@ export function Filters() {
               <SelectValue placeholder="Max" />
             </SelectTrigger>
             <SelectContent>
-              <SelectItem key={'id-aqui'} value={'id-aqui'}>
-                2018
-              </SelectItem>
-              <SelectItem key={'id-aqui-1'} value={'id-aqui-1'}>
-                2019
-              </SelectItem>
-              <SelectItem key={'id-aqui-2'} value={'id-aqui-2'}>
-                2020
-              </SelectItem>
+              {getYears().map((year) => (
+                <SelectItem key={year} value={year.toString()}>
+                  {year}
+                </SelectItem>
+              ))}
             </SelectContent>
           </Select>
         </div>
