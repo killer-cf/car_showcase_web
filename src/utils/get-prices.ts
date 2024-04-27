@@ -2,7 +2,7 @@ export function getPrices() {
   const prices = []
 
   for (let i = 10; i <= 1000; ) {
-    prices.push((i * 1000).toLocaleString('pt-BR'))
+    prices.push(i * 1000)
     if (i < 100) {
       i += 10
     } else if (i < 200) {

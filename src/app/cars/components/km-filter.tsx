@@ -33,10 +33,15 @@ export default function KmFilter() {
     })
   }
 
+  const kmOnSearchParams = searchParams.get('km')
+
   return (
     <div className="px-4 py-6 border-b-2">
       <p className="mb-4">Quilometragem</p>
-      <Select onValueChange={(value) => reloadPage(value)}>
+      <Select
+        onValueChange={(value) => reloadPage(value)}
+        defaultValue={kmOnSearchParams || 'qualquer'}
+      >
         <SelectTrigger className="text-black bg-background">
           <SelectValue placeholder="Qualquer" />
         </SelectTrigger>

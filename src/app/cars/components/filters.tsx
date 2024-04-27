@@ -6,11 +6,11 @@ import {
   SelectTrigger,
   SelectValue,
 } from '@/components/ui/select'
-import { getPrices } from '@/utils/get-prices'
 import { getYears } from '@/utils/get-years'
 
 import KmFilter from './km-filter'
 import { ModelsFilter } from './models-filter'
+import { PriceFilter } from './price-filter'
 import { Tag } from './tag'
 
 export function Filters() {
@@ -106,38 +106,7 @@ export function Filters() {
 
       <div className="px-4 py-6 border-b-2">
         <p className="mb-4">Preço</p>
-        <div className="flex gap-3">
-          <Select>
-            <SelectTrigger className="text-black bg-background">
-              <SelectValue placeholder="Min" />
-            </SelectTrigger>
-            <SelectContent>
-              <SelectItem key={'no-limit'} value={'no-limit'}>
-                Sem limite
-              </SelectItem>
-              {getPrices().map((price) => (
-                <SelectItem key={price} value={price}>
-                  {price}
-                </SelectItem>
-              ))}
-            </SelectContent>
-          </Select>
-          <Select>
-            <SelectTrigger className="text-black bg-background">
-              <SelectValue placeholder="Max" />
-            </SelectTrigger>
-            <SelectContent>
-              <SelectItem key={'no-limit'} value={'no-limit'}>
-                Sem limite
-              </SelectItem>
-              {getPrices().map((price) => (
-                <SelectItem key={price} value={price}>
-                  {price}
-                </SelectItem>
-              ))}
-            </SelectContent>
-          </Select>
-        </div>
+        <PriceFilter />
       </div>
 
       <KmFilter />
