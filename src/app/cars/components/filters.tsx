@@ -1,17 +1,51 @@
 'use client'
 
-import { Button } from '@/components/ui/button'
+import { usePathname, useRouter, useSearchParams } from 'next/navigation'
+import { useCallback } from 'react'
 
-import { BrandsFilter } from './brands-filter'
-import KmFilter from './km-filter'
+import { SelectOptions } from '@/components/select-options'
+import { Button } from '@/components/ui/button'
+import { brStates } from '@/utils/br-states'
+import { getKms } from '@/utils/get-kms'
+
 import { ModelsFilter } from './models-filter'
 import { PriceFilter } from './price-filter'
-import { StateFilter } from './state-filter'
-import { StatusFilter } from './status-filter'
 import { Tag } from './tag'
 import { YearFilter } from './year-filter'
 
 export function Filters() {
+  const router = useRouter()
+  const pathname = usePathname()
+  const searchParams = useSearchParams()
+
+  const createQueryString = useCallback(
+    (name: string, value: string) => {
+      const params = new URLSearchParams(searchParams.toString())
+      params.set(name, value)
+
+      return params.toString()
+    },
+    [searchParams],
+  )
+
+  function updateFilters(key: string, value: string) {
+    router.push(pathname + '?' + createQueryString(key, value), {
+      scroll: false,
+    })
+  }
+
+  const brands = [
+    { key: 'Tesla', value: 'Tesla' },
+    { key: 'BYD', value: 'BYD' },
+    { key: 'Ford', value: 'Ford' },
+  ]
+
+  const status = [
+    { key: 'new', value: 'Novo' },
+    { key: 'used', value: 'Usado' },
+    { key: 'new-and-used', value: 'Novo e usado' },
+  ]
+
   return (
     <div className="flex flex-col border max-w-[300px]">
       <div className="p-4">
@@ -29,9 +63,27 @@ export function Filters() {
       </div>
       <div className="bg-gray-200 px-4 py-6">
         <div className="text-primary flex flex-col">
-          <StateFilter />
-          <StatusFilter />
-          <BrandsFilter />
+          <SelectOptions
+            name="state"
+            className="text-black rounded-none rounded-t-md bg-background"
+            handleSelectChange={updateFilters}
+            options={brStates}
+            placeholder="Estado"
+          />
+          <SelectOptions
+            name="status"
+            className="text-black rounded-none bg-background"
+            handleSelectChange={updateFilters}
+            options={status}
+            placeholder="Novo ou usado"
+          />
+          <SelectOptions
+            name="brand"
+            className="text-black bg-background rounded-none rounded-b-md"
+            handleSelectChange={updateFilters}
+            options={brands}
+            placeholder="Fabricante"
+          />
         </div>
       </div>
       <div className="px-4 py-6 border-b-2">
@@ -44,7 +96,16 @@ export function Filters() {
         <PriceFilter />
       </div>
 
-      <KmFilter />
+      <div className="px-4 py-6 border-b-2">
+        <p className="mb-4">Quilometragem</p>
+        <SelectOptions
+          name="km"
+          className="text-black bg-background"
+          handleSelectChange={updateFilters}
+          options={getKms()}
+          defaultValue="qualquer"
+        />
+      </div>
 
       <div className="px-4 py-6 border-b-2">
         <p className="mb-4">Ano</p>

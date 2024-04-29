@@ -26,4 +26,4 @@ export const brStates = [
   'São Paulo',
   'Sergipe',
   'Tocantins',
-]
+].map((state) => ({ key: state, value: state }))
