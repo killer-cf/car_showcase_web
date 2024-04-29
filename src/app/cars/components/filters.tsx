@@ -6,12 +6,12 @@ import {
   SelectTrigger,
   SelectValue,
 } from '@/components/ui/select'
-import { getYears } from '@/utils/get-years'
 
 import KmFilter from './km-filter'
 import { ModelsFilter } from './models-filter'
 import { PriceFilter } from './price-filter'
 import { Tag } from './tag'
+import { YearFilter } from './year-filter'
 
 export function Filters() {
   return (
@@ -113,32 +113,7 @@ export function Filters() {
 
       <div className="px-4 py-6 border-b-2">
         <p className="mb-4">Ano</p>
-        <div className="flex gap-3">
-          <Select>
-            <SelectTrigger className="text-black bg-background">
-              <SelectValue placeholder="Min" />
-            </SelectTrigger>
-            <SelectContent>
-              {getYears().map((year) => (
-                <SelectItem key={year} value={year.toString()}>
-                  {year}
-                </SelectItem>
-              ))}
-            </SelectContent>
-          </Select>
-          <Select>
-            <SelectTrigger className="text-black bg-background">
-              <SelectValue placeholder="Max" />
-            </SelectTrigger>
-            <SelectContent>
-              {getYears().map((year) => (
-                <SelectItem key={year} value={year.toString()}>
-                  {year}
-                </SelectItem>
-              ))}
-            </SelectContent>
-          </Select>
-        </div>
+        <YearFilter />
       </div>
     </div>
   )
