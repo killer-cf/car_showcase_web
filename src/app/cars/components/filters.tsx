@@ -1,15 +1,13 @@
-import { Button } from '@/components/ui/button'
-import {
-  Select,
-  SelectContent,
-  SelectItem,
-  SelectTrigger,
-  SelectValue,
-} from '@/components/ui/select'
+'use client'
 
+import { Button } from '@/components/ui/button'
+
+import { BrandsFilter } from './brands-filter'
 import KmFilter from './km-filter'
 import { ModelsFilter } from './models-filter'
 import { PriceFilter } from './price-filter'
+import { StateFilter } from './state-filter'
+import { StatusFilter } from './status-filter'
 import { Tag } from './tag'
 import { YearFilter } from './year-filter'
 
@@ -31,72 +29,9 @@ export function Filters() {
       </div>
       <div className="bg-gray-200 px-4 py-6">
         <div className="text-primary flex flex-col">
-          <div className="flex">
-            <Select>
-              <SelectTrigger className="text-black rounded-none rounded-tl-md bg-background">
-                <SelectValue placeholder="Estado" />
-              </SelectTrigger>
-              <SelectContent>
-                <SelectItem key={'id-aqui'} value={'id-aqui'}>
-                  Pernambuco
-                </SelectItem>
-                <SelectItem key={'id-aqui-1'} value={'id-aqui-1'}>
-                  Paraiba
-                </SelectItem>
-                <SelectItem key={'id-aqui-2'} value={'id-aqui-2'}>
-                  Sergipe
-                </SelectItem>
-              </SelectContent>
-            </Select>
-            <Select>
-              <SelectTrigger className="text-black rounded-none rounded-tr-md bg-background">
-                <SelectValue placeholder="Cidade" />
-              </SelectTrigger>
-              <SelectContent>
-                <SelectItem key={'id-aqui'} value={'id-aqui'}>
-                  Recife
-                </SelectItem>
-                <SelectItem key={'id-aqui-1'} value={'id-aqui-1'}>
-                  Petrolina
-                </SelectItem>
-                <SelectItem key={'id-aqui-2'} value={'id-aqui-2'}>
-                  Olinda
-                </SelectItem>
-              </SelectContent>
-            </Select>
-          </div>
-          <Select>
-            <SelectTrigger className="text-black rounded-none bg-background">
-              <SelectValue placeholder="Novo ou usado" />
-            </SelectTrigger>
-            <SelectContent>
-              <SelectItem key={'id-aqui'} value={'id-aqui'}>
-                Novo
-              </SelectItem>
-              <SelectItem key={'id-aqui-1'} value={'id-aqui-1'}>
-                Usado
-              </SelectItem>
-              <SelectItem key={'id-aqui-2'} value={'id-aqui-2'}>
-                Novo e usado
-              </SelectItem>
-            </SelectContent>
-          </Select>
-          <Select>
-            <SelectTrigger className="text-black rounded-none rounded-b-md bg-background">
-              <SelectValue placeholder="Fabricante" />
-            </SelectTrigger>
-            <SelectContent>
-              <SelectItem key={'id-aqui'} value={'id-aqui'}>
-                Tesla
-              </SelectItem>
-              <SelectItem key={'id-aqui-1'} value={'id-aqui-1'}>
-                Ford
-              </SelectItem>
-              <SelectItem key={'id-aqui-2'} value={'id-aqui-2'}>
-                Toyota
-              </SelectItem>
-            </SelectContent>
-          </Select>
+          <StateFilter />
+          <StatusFilter />
+          <BrandsFilter />
         </div>
       </div>
       <div className="px-4 py-6 border-b-2">
