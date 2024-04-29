@@ -32,8 +32,6 @@ export function SelectOptions({
   const searchParams = useSearchParams()
   const valueOnSearchParams = searchParams.get(name)
 
-  console.log('valueOnSearchParams', valueOnSearchParams)
-
   return (
     <Select
       onValueChange={(value) => handleSelectChange(name, value)}

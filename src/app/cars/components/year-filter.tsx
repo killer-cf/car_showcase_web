@@ -1,7 +1,6 @@
 'use client'
 
-import { usePathname, useRouter, useSearchParams } from 'next/navigation'
-import { useCallback } from 'react'
+import { useSearchParams } from 'next/navigation'
 
 import {
   Select,
@@ -12,26 +11,12 @@ import {
 } from '@/components/ui/select'
 import { getYears } from '@/utils/get-years'
 
-export function YearFilter() {
-  const router = useRouter()
-  const pathname = usePathname()
+interface YearFilterProps {
+  handleSelectChange: (key: string, value: string) => void
+}
+
+export function YearFilter({ handleSelectChange }: YearFilterProps) {
   const searchParams = useSearchParams()
-
-  const createQueryString = useCallback(
-    (name: string, value: string) => {
-      const params = new URLSearchParams(searchParams.toString())
-      params.set(name, value)
-
-      return params.toString()
-    },
-    [searchParams],
-  )
-
-  function reloadPage(key: string, value: string) {
-    router.push(pathname + '?' + createQueryString(key, value), {
-      scroll: false,
-    })
-  }
 
   const years = getYears()
   const firstYear = years[0]
@@ -46,7 +31,7 @@ export function YearFilter() {
 
   return (
     <div className="flex gap-3">
-      <Select onValueChange={(value) => reloadPage('min_year', value)}>
+      <Select onValueChange={(value) => handleSelectChange('min_year', value)}>
         <SelectTrigger className="text-black bg-background">
           <SelectValue placeholder="Min" />
         </SelectTrigger>
@@ -58,7 +43,7 @@ export function YearFilter() {
           ))}
         </SelectContent>
       </Select>
-      <Select onValueChange={(value) => reloadPage('max_year', value)}>
+      <Select onValueChange={(value) => handleSelectChange('max_year', value)}>
         <SelectTrigger className="text-black bg-background">
           <SelectValue placeholder="Max" />
         </SelectTrigger>

@@ -40,11 +40,25 @@ export function Filters() {
     { key: 'Ford', value: 'Ford' },
   ]
 
+  const models = [
+    { key: 'Model S', value: 'Model S' },
+    { key: 'Model 3', value: 'Model 3' },
+    { key: 'Model X', value: 'Model X' },
+    { key: 'Model Y', value: 'Model Y' },
+    { key: 'Cybertruck', value: 'Cybertruck' },
+  ]
+
   const status = [
     { key: 'new', value: 'Novo' },
     { key: 'used', value: 'Usado' },
     { key: 'new-and-used', value: 'Novo e usado' },
   ]
+
+  const modelsOnSearchParams = searchParams
+    .get('models')
+    ?.split(',')
+    .filter((model) => model !== '')
+  const brandsOnSearchParams = searchParams.get('brand')
 
   return (
     <div className="flex flex-col border max-w-[300px]">
@@ -56,9 +70,10 @@ export function Filters() {
           </Button>
         </div>
         <div className="flex mt-6 flex-wrap max-w-[300px]">
-          <Tag title="Tesla" />
-          <Tag title="Model S" />
-          <Tag title="Cybertruck" />
+          {brandsOnSearchParams && <Tag title={brandsOnSearchParams} />}
+          {modelsOnSearchParams?.map((model) => (
+            <Tag key={model} title={model} />
+          ))}
         </div>
       </div>
       <div className="bg-gray-200 px-4 py-6">
@@ -88,12 +103,12 @@ export function Filters() {
       </div>
       <div className="px-4 py-6 border-b-2">
         <p className="mb-4">Tesla models</p>
-        <ModelsFilter />
+        <ModelsFilter handleCheckBoxChange={updateFilters} options={models} />
       </div>
 
       <div className="px-4 py-6 border-b-2">
         <p className="mb-4">Preço</p>
-        <PriceFilter />
+        <PriceFilter handleSelectChange={updateFilters} />
       </div>
 
       <div className="px-4 py-6 border-b-2">
@@ -109,7 +124,7 @@ export function Filters() {
 
       <div className="px-4 py-6 border-b-2">
         <p className="mb-4">Ano</p>
-        <YearFilter />
+        <YearFilter handleSelectChange={updateFilters} />
       </div>
     </div>
   )

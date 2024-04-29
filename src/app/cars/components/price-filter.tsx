@@ -1,7 +1,6 @@
 'use client'
 
-import { usePathname, useRouter, useSearchParams } from 'next/navigation'
-import { useCallback } from 'react'
+import { useSearchParams } from 'next/navigation'
 
 import {
   Select,
@@ -12,26 +11,12 @@ import {
 } from '@/components/ui/select'
 import { getPrices } from '@/utils/get-prices'
 
-export function PriceFilter() {
-  const router = useRouter()
-  const pathname = usePathname()
+interface PriceFilterProps {
+  handleSelectChange: (key: string, value: string) => void
+}
+
+export function PriceFilter({ handleSelectChange }: PriceFilterProps) {
   const searchParams = useSearchParams()
-
-  const createQueryString = useCallback(
-    (name: string, value: string) => {
-      const params = new URLSearchParams(searchParams.toString())
-      params.set(name, value)
-
-      return params.toString()
-    },
-    [searchParams],
-  )
-
-  function reloadPage(key: string, value: string) {
-    router.push(pathname + '?' + createQueryString(key, value), {
-      scroll: false,
-    })
-  }
 
   const firstPrice = getPrices()[0].toString()
   const lastPrice = getPrices()[getPrices().length - 1].toString()
@@ -46,7 +31,7 @@ export function PriceFilter() {
   return (
     <div className="flex gap-3">
       <Select
-        onValueChange={(value) => reloadPage('min_price', value)}
+        onValueChange={(value) => handleSelectChange('min_price', value)}
         defaultValue={minPriceOnSearch || 'no-limit'}
       >
         <SelectTrigger className="text-black bg-background">
@@ -64,7 +49,7 @@ export function PriceFilter() {
         </SelectContent>
       </Select>
       <Select
-        onValueChange={(value) => reloadPage('max_price', value)}
+        onValueChange={(value) => handleSelectChange('max_price', value)}
         defaultValue={maxPriceOnSearch || 'no-limit'}
       >
         <SelectTrigger className="text-black bg-background">

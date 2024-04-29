@@ -1,103 +1,55 @@
 'use client'
 
-import { zodResolver } from '@hookform/resolvers/zod'
-import { useForm } from 'react-hook-form'
-import { z } from 'zod'
+import { useSearchParams } from 'next/navigation'
 
 import { Checkbox } from '@/components/ui/checkbox'
-import {
-  Form,
-  FormControl,
-  FormField,
-  FormItem,
-  FormLabel,
-  FormMessage,
-} from '@/components/ui/form'
 
-const items = [
-  {
-    id: 'recents',
-    label: 'Cybertruck',
-  },
-  {
-    id: 'home',
-    label: 'Model 3',
-  },
-  {
-    id: 'applications',
-    label: 'Model S',
-  },
-  {
-    id: 'desktop',
-    label: 'Model X',
-  },
-  {
-    id: 'downloads',
-    label: 'Model Y',
-  },
-] as const
+interface ModelsFilterProps {
+  handleCheckBoxChange: (key: string, value: string) => void
+  options: {
+    key: string
+    value: string
+  }[]
+}
 
-const FormSchema = z.object({
-  items: z.array(z.string()).refine((value) => value.some((item) => item), {
-    message: 'You have to select at least one item.',
-  }),
-})
+export function ModelsFilter({
+  handleCheckBoxChange,
+  options,
+}: ModelsFilterProps) {
+  const searchParams = useSearchParams()
 
-export function ModelsFilter() {
-  const form = useForm<z.infer<typeof FormSchema>>({
-    resolver: zodResolver(FormSchema),
-    defaultValues: {
-      items: ['recents', 'home'],
-    },
-  })
+  const modelsOnSearchParams = searchParams
+    .get('models')
+    ?.split(',')
+    .filter((model) => model !== '')
 
   return (
-    <Form {...form}>
-      <form className="space-y-8">
-        <FormField
-          control={form.control}
-          name="items"
-          render={() => (
-            <FormItem>
-              {items.map((item) => (
-                <FormField
-                  key={item.id}
-                  control={form.control}
-                  name="items"
-                  render={({ field }) => {
-                    return (
-                      <FormItem
-                        key={item.id}
-                        className="flex flex-row items-start space-x-3 space-y-0"
-                      >
-                        <FormControl>
-                          <Checkbox
-                            className="w-5 h-5 mb-2"
-                            checked={field.value?.includes(item.id)}
-                            onCheckedChange={(checked) => {
-                              return checked
-                                ? field.onChange([...field.value, item.id])
-                                : field.onChange(
-                                    field.value?.filter(
-                                      (value) => value !== item.id,
-                                    ),
-                                  )
-                            }}
-                          />
-                        </FormControl>
-                        <FormLabel className="text-md font-normal">
-                          {item.label}
-                        </FormLabel>
-                      </FormItem>
-                    )
-                  }}
-                />
-              ))}
-              <FormMessage />
-            </FormItem>
-          )}
-        />
-      </form>
-    </Form>
+    <>
+      {options.map((option) => (
+        <div key={option.key} className="flex gap-2">
+          <Checkbox
+            className="w-5 h-5 mb-2"
+            checked={modelsOnSearchParams?.includes(option.key)}
+            onCheckedChange={(checked) => {
+              if (checked) {
+                handleCheckBoxChange(
+                  'models',
+                  modelsOnSearchParams?.concat(option.key).join(',') ||
+                    option.key,
+                )
+              } else {
+                handleCheckBoxChange(
+                  'models',
+                  modelsOnSearchParams
+                    ?.filter((model) => model !== option.key)
+                    .join(',') || '',
+                )
+              }
+            }}
+          />
+          <span>{option.value}</span>
+        </div>
+      ))}
+    </>
   )
 }
