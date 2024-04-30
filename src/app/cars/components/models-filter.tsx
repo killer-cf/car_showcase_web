@@ -29,7 +29,7 @@ export function ModelsFilter({
         <div key={option.key} className="flex gap-2">
           <Checkbox
             className="w-5 h-5 mb-2"
-            checked={modelsOnSearchParams?.includes(option.key)}
+            checked={modelsOnSearchParams?.includes(option.key) || false}
             onCheckedChange={(checked) => {
               if (checked) {
                 handleCheckBoxChange(

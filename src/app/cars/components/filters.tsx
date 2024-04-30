@@ -60,12 +60,21 @@ export function Filters() {
     .filter((model) => model !== '')
   const brandsOnSearchParams = searchParams.get('brand')
 
+  function clearFilters() {
+    router.push(pathname, { scroll: false })
+  }
+
   return (
     <div className="flex flex-col border max-w-[300px]">
       <div className="p-4">
         <div className="flex justify-between items-center">
           <span className="text-lg">132 anúncios</span>
-          <Button variant="ghost" size="sm" className="text-lg text-primary">
+          <Button
+            variant="ghost"
+            size="sm"
+            className="text-lg text-primary"
+            onClick={clearFilters}
+          >
             Limpar
           </Button>
         </div>

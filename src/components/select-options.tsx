@@ -1,6 +1,7 @@
 'use client'
 
 import { useSearchParams } from 'next/navigation'
+import { useEffect, useState } from 'react'
 
 import {
   Select,
@@ -9,7 +10,6 @@ import {
   SelectTrigger,
   SelectValue,
 } from '@/components/ui/select'
-
 interface SelectOptionsProps extends React.HTMLAttributes<HTMLDivElement> {
   handleSelectChange: (key: string, value: string) => void
   name: string
@@ -30,12 +30,19 @@ export function SelectOptions({
   className,
 }: SelectOptionsProps) {
   const searchParams = useSearchParams()
-  const valueOnSearchParams = searchParams.get(name)
+  const [value, setValue] = useState(searchParams.get(name) || defaultValue)
+
+  useEffect(() => {
+    setValue(searchParams.get(name) || defaultValue)
+  }, [searchParams, name, defaultValue])
 
   return (
     <Select
-      onValueChange={(value) => handleSelectChange(name, value)}
-      defaultValue={valueOnSearchParams || defaultValue}
+      onValueChange={(value) => {
+        setValue(value)
+        handleSelectChange(name, value)
+      }}
+      value={value || ''}
     >
       <SelectTrigger className={className}>
         <SelectValue placeholder={placeholder} />
