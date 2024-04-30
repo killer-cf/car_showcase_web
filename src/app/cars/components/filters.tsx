@@ -6,6 +6,7 @@ import { useCallback } from 'react'
 import { SelectOptions } from '@/components/select-options'
 import { Button } from '@/components/ui/button'
 import { brStates } from '@/utils/br-states'
+import { carStatus } from '@/utils/car-status'
 import { getKms } from '@/utils/get-kms'
 
 import { ModelsFilter } from './models-filter'
@@ -46,12 +47,6 @@ export function Filters() {
     { key: 'Model X', value: 'Model X' },
     { key: 'Model Y', value: 'Model Y' },
     { key: 'Cybertruck', value: 'Cybertruck' },
-  ]
-
-  const status = [
-    { key: 'new', value: 'Novo' },
-    { key: 'used', value: 'Usado' },
-    { key: 'new-and-used', value: 'Novo e usado' },
   ]
 
   const modelsOnSearchParams = searchParams
@@ -98,7 +93,7 @@ export function Filters() {
             name="status"
             className="text-black rounded-none bg-background"
             handleSelectChange={updateFilters}
-            options={status}
+            options={carStatus}
             placeholder="Novo ou usado"
           />
           <SelectOptions

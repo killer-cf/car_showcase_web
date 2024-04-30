@@ -16,3 +16,13 @@ export function getPrices() {
 
   return prices
 }
+
+export const prices = getPrices().map((price) => ({
+  key: price.toString(),
+  value:
+    'Até ' +
+    price.toLocaleString('pt-BR', {
+      style: 'currency',
+      currency: 'BRL',
+    }),
+}))
