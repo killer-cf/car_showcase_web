@@ -1,10 +1,12 @@
 'use client'
 
 import { useRouter } from 'next/navigation'
-import { useCallback, useState } from 'react'
+import { useCallback, useEffect, useState } from 'react'
 
 import { SelectOptions } from '@/components/select-options'
 import { Button } from '@/components/ui/button'
+import { Brand } from '@/data/types/brand'
+import { Model } from '@/data/types/model'
 import { brStates } from '@/utils/br-states'
 import { carStatus } from '@/utils/car-status'
 import { prices } from '@/utils/get-prices'
@@ -13,6 +15,18 @@ export function HomeFilters() {
   const router = useRouter()
   const [searchParams, setSearchParams] = useState(new URLSearchParams())
   const [path, setPath] = useState('/cars')
+  const [brands, setBrands] = useState<Brand[]>([])
+  const [models, setModels] = useState<Model[]>([])
+
+  const brandsForSelect = brands.map((brand) => ({
+    key: brand.name,
+    value: brand.name,
+  }))
+
+  const modelsForSelect = models.map((model) => ({
+    key: model.name,
+    value: model.name,
+  }))
 
   const updateQueryString = useCallback(
     (name: string, value: string) => {
@@ -33,11 +47,45 @@ export function HomeFilters() {
     updateQueryString(name, value)
   }
 
-  const brands = [
-    { key: 'Tesla', value: 'Tesla' },
-    { key: 'BYD', value: 'BYD' },
-    { key: 'Ford', value: 'Ford' },
-  ]
+  const getBrands = async () => {
+    try {
+      const response = await fetch('/api/brands')
+      if (response) {
+        const json = await response.json()
+        setBrands(json.data.brands)
+      }
+    } catch (error) {
+      console.log(error)
+    }
+  }
+
+  const getModels = async (brandId: string) => {
+    try {
+      const response = await fetch(`/api/brands/${brandId}/models`)
+      if (response) {
+        const json = await response.json()
+        console.log(json)
+        setModels(json.data.models)
+      }
+    } catch (error) {
+      console.log(error)
+    }
+  }
+
+  const brandOnSearch = searchParams.get('brand')
+
+  useEffect(() => {
+    getBrands()
+  }, [])
+
+  useEffect(() => {
+    if (brands.length > 0 && brandOnSearch) {
+      const brandId = brands.find((brand) => brand.name === brandOnSearch)?.id
+
+      if (!brandId) return
+      getModels(brandId)
+    }
+  }, [brands, brandOnSearch])
 
   return (
     <div className="filters mt-4">
@@ -53,14 +101,14 @@ export function HomeFilters() {
           name="brand"
           className="text-black bg-background rounded-none"
           handleSelectChange={handleSelectChange}
-          options={brands}
+          options={brandsForSelect}
           placeholder="Fabricante"
         />
         <SelectOptions
           name="models"
           className="text-black bg-background rounded-none"
           handleSelectChange={handleSelectChange}
-          options={brands}
+          options={modelsForSelect}
           placeholder="Modelo"
         />
       </div>

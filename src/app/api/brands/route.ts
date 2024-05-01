@@ -29,3 +29,9 @@ export async function POST(request: Request) {
 
   return Response.json({ status: response.status, data: response.data })
 }
+
+export async function GET() {
+  const response = await api('/api/v1/brands').then((res) => res.json())
+
+  return Response.json(response)
+}
