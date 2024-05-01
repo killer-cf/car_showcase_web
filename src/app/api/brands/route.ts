@@ -31,7 +31,11 @@ export async function POST(request: Request) {
 }
 
 export async function GET() {
-  const response = await api('/api/v1/brands').then((res) => res.json())
+  const response = await api('/api/v1/brands', {
+    next: {
+      revalidate: 60 * 60 * 24,
+    },
+  }).then((res) => res.json())
 
   return Response.json(response)
 }

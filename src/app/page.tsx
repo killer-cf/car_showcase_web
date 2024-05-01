@@ -1,10 +1,23 @@
+import {
+  dehydrate,
+  HydrationBoundary,
+  QueryClient,
+} from '@tanstack/react-query'
 import Image from 'next/image'
 
 import { HomeFilters } from '@/components/home-filters'
+import { fetchBrands } from '@/data/actions/fetch-brands'
 
 import CarImage from '../../public/car.webp'
 
-export default function Home() {
+export default async function Home() {
+  const queryClient = new QueryClient()
+
+  await queryClient.prefetchQuery({
+    queryKey: ['brands'],
+    queryFn: async () => fetchBrands(),
+  })
+
   return (
     <main className="flex flex-col">
       <div className="bg-[#29302F] w-full h-[500px]">
@@ -34,7 +47,9 @@ export default function Home() {
             </div>
           </div>
 
-          <HomeFilters />
+          <HydrationBoundary state={dehydrate(queryClient)}>
+            <HomeFilters />
+          </HydrationBoundary>
         </div>
       </div>
     </main>

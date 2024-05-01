@@ -6,6 +6,7 @@ import localFont from 'next/font/local'
 import { ToastContainer } from 'react-toastify'
 
 import { Header } from '@/components/header'
+import Providers from '@/lib/query-provider'
 import { cn } from '@/lib/utils'
 
 import SessionProvider from './providers/session-provider'
@@ -57,24 +58,26 @@ export default function RootLayout({
             fontApercu.variable,
           )}
         >
-          <div>
-            <Header />
-            {children}
-          </div>
-          <div className="absolute top-0 right-0 ">
-            <ToastContainer
-              position="top-right"
-              autoClose={5000}
-              hideProgressBar={false}
-              newestOnTop={false}
-              closeOnClick
-              rtl={false}
-              pauseOnFocusLoss
-              draggable
-              pauseOnHover
-              theme="dark"
-            />
-          </div>
+          <Providers>
+            <div>
+              <Header />
+              {children}
+            </div>
+            <div className="absolute top-0 right-0 ">
+              <ToastContainer
+                position="top-right"
+                autoClose={5000}
+                hideProgressBar={false}
+                newestOnTop={false}
+                closeOnClick
+                rtl={false}
+                pauseOnFocusLoss
+                draggable
+                pauseOnHover
+                theme="dark"
+              />
+            </div>
+          </Providers>
         </body>
       </SessionProvider>
     </html>

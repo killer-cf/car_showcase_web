@@ -1,7 +1,6 @@
 'use client'
 
 import { zodResolver } from '@hookform/resolvers/zod'
-import { useEffect, useState } from 'react'
 import { useForm } from 'react-hook-form'
 import { toast } from 'react-toastify'
 import { z } from 'zod'
@@ -25,10 +24,9 @@ import {
   SelectTrigger,
   SelectValue,
 } from '@/components/ui/select'
-import { api } from '@/data/api'
-import { Brand } from '@/data/types/brand'
 import { Car } from '@/data/types/car'
-import { Model } from '@/data/types/model'
+import { useFetchBrandModels } from '@/data/uses/use-fetch-brand-models'
+import { useFetchBrands } from '@/data/uses/use-fetch-brands'
 
 import { Switch } from './ui/switch'
 
@@ -86,10 +84,6 @@ export function CarForm({ isEditing = false, car }: CarFormProps) {
     },
   })
 
-  const [brands, setBrands] = useState<Brand[]>([])
-  const [models, setModels] = useState<Model[]>([])
-  const selectedBranchId = form.watch('brand')
-
   async function handleCreateCar(data: CarForm) {
     try {
       const formData = new FormData()
@@ -138,37 +132,12 @@ export function CarForm({ isEditing = false, car }: CarFormProps) {
     }
   }
 
-  useEffect(() => {
-    async function fetchBrands() {
-      try {
-        const response = await api('/api/v1/brands').then((res) => res.json())
+  const { data } = useFetchBrands()
+  const brands = data?.brands
+  const selectedBrandId = form.watch('brand')
 
-        setBrands(response.data)
-      } catch (error) {
-        toast.error('Falha ao processar a requisição!')
-      }
-    }
-
-    fetchBrands()
-  }, [])
-
-  useEffect(() => {
-    selectedBranchId.length === 0 && setModels([])
-
-    async function fetchModels() {
-      try {
-        const response = await api(
-          `/api/v1/brands/${selectedBranchId}/models`,
-        ).then((res) => res.json())
-
-        setModels(response.data)
-      } catch (error) {
-        toast.error('Falha ao processar a requisição!')
-      }
-    }
-
-    fetchModels()
-  }, [selectedBranchId])
+  const { data: modelData } = useFetchBrandModels(selectedBrandId)
+  const models = modelData?.models
 
   return (
     <div className="flex justify-center">
@@ -289,7 +258,8 @@ export function CarForm({ isEditing = false, car }: CarFormProps) {
                     </SelectTrigger>
                   </FormControl>
                   <SelectContent>
-                    {brands?.length > 0 &&
+                    {brands &&
+                      brands?.length > 0 &&
                       brands.map((brand) => (
                         <SelectItem key={brand.id} value={brand.id}>
                           {brand.name}
@@ -318,7 +288,8 @@ export function CarForm({ isEditing = false, car }: CarFormProps) {
                     </SelectTrigger>
                   </FormControl>
                   <SelectContent>
-                    {models?.length > 0 &&
+                    {models &&
+                      models?.length > 0 &&
                       models.map((model) => (
                         <SelectItem key={model.id} value={model.id}>
                           {model.name}
