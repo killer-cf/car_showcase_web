@@ -1,6 +1,7 @@
 'use client'
 
 import { zodResolver } from '@hookform/resolvers/zod'
+import { useMutation, useQueryClient } from '@tanstack/react-query'
 import { useForm } from 'react-hook-form'
 import { toast } from 'react-toastify'
 import { z } from 'zod'
@@ -15,6 +16,7 @@ import {
   FormMessage,
 } from '@/components/ui/form'
 import { Input } from '@/components/ui/input'
+import { ResponseData } from '@/data/actions/fetch-brands'
 import { Brand } from '@/data/types/brand'
 
 const createBrandFormSchema = z.object({
@@ -33,6 +35,7 @@ interface BrandFormProps {
 }
 
 export function BrandForm({ isEditing = false, brand }: BrandFormProps) {
+  const queryClient = useQueryClient()
   const formSchema = isEditing ? editBrandFormSchema : createBrandFormSchema
 
   const form = useForm<BrandForm>({
@@ -42,24 +45,53 @@ export function BrandForm({ isEditing = false, brand }: BrandFormProps) {
     },
   })
 
+  async function createBrand(data: BrandForm) {
+    const response = await fetch('/api/brands', {
+      method: 'POST',
+      body: JSON.stringify(data),
+    }).then((res) => res.json())
+
+    return response
+  }
+
+  const { mutateAsync: createBrandFn } = useMutation({
+    mutationKey: ['brands'],
+    mutationFn: createBrand,
+    onSuccess(response) {
+      const newBrand = response.data.brand
+
+      if (!newBrand) {
+        return
+      }
+
+      queryClient.setQueryData(['brands'], (data: ResponseData) => {
+        return {
+          brands: [...data.brands, newBrand],
+          meta: data.meta,
+        }
+      })
+    },
+  })
+
   async function handleCreateBrand(data: BrandForm) {
     try {
-      const response = await fetch('/api/brands', {
-        method: 'POST',
-        body: JSON.stringify(data),
-      }).then((res) => res.json())
+      const response = await createBrandFn(data)
+      const keys = response.data.errors ? Object.keys(response.data.errors) : []
 
       switch (response.status) {
         case 201:
           form.reset()
           toast.success('Marca cadastrado com sucesso!')
+          alert('Marca cadastrado com sucesso!')
           break
         case 500:
           toast.error('Erro de servidor')
           break
         case 422:
-          console.log(response)
-          // form.setError()
+          for (const key of keys) {
+            const error = response.data.errors[key]
+            form.setError(key as 'name', { message: `${key} ${error}` })
+          }
           break
         case 401:
           toast.error('Não autorizado!')

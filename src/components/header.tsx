@@ -3,6 +3,7 @@ import Image from 'next/image'
 import Link from 'next/link'
 
 import Logo from '../../public/logo_size.jpg'
+import AuthStatus from './auth-status'
 import { Button } from './ui/button'
 
 export function Header() {
@@ -17,6 +18,10 @@ export function Header() {
           <Button variant="link" className="text-md">
             <Link href={'/cars'}>Carros a venda</Link>
           </Button>
+          <Button variant="link" className="text-md">
+            <Link href={'/brands'}>Marcas</Link>
+          </Button>
+          <AuthStatus />
         </div>
 
         <div>

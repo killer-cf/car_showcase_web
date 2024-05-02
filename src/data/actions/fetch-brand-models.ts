@@ -1,3 +1,5 @@
+'use server'
+
 import { api } from '../api'
 import { Metadata } from '../types/metadata'
 import { Model } from '../types/model'
@@ -36,7 +38,7 @@ export async function fetchBrandModels({
 
     if (response.status === 200) {
       return {
-        models: response.data.brands,
+        models: response.data.models,
         meta: response.data.meta,
         statusCode: response.status,
         message: 'OK',

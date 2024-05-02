@@ -1,8 +1,10 @@
+'use server'
+
 import { api } from '../api'
 import { Brand } from '../types/brand'
 import { Metadata } from '../types/metadata'
 
-type ResponseData = {
+export type ResponseData = {
   brands: Brand[]
   meta?: Metadata
   statusCode: number
@@ -18,7 +20,8 @@ export async function fetchBrands(
       `api/v1/brands?page=${page}&per_page=${perPage}`,
       {
         next: {
-          tags: ['Brands'],
+          revalidate: 60 * 60 * 24,
+          tags: [`Brands:${page}:${perPage}`, 'Brands'],
         },
       },
     ).then((res) => res.json())

@@ -30,8 +30,6 @@ export function HomeFilters() {
       value: brand.name,
     })) || []
 
-  // const brandsForSelect = []
-
   const modelsForSelect =
     models?.map((model) => ({
       key: model.name,
@@ -56,44 +54,6 @@ export function HomeFilters() {
   function handleSelectChange(name: string, value: string) {
     updateQueryString(name, value)
   }
-
-  // const getBrands = async () => {
-  //   try {
-  //     const response = await fetch('/api/brands')
-  //     if (response) {
-  //       const json = await response.json()
-  //       setBrands(json.data.brands)
-  //     }
-  //   } catch (error) {
-  //     console.log(error)
-  //   }
-  // }
-
-  // const getModels = async (brandId: string) => {
-  //   try {
-  //     const response = await fetch(`/api/brands/${brandId}/models`)
-  //     if (response) {
-  //       const json = await response.json()
-  //       console.log(json)
-  //       setModels(json.data.models)
-  //     }
-  //   } catch (error) {
-  //     console.log(error)
-  //   }
-  // }
-
-  // useEffect(() => {
-  //   getBrands()
-  // }, [])
-
-  // useEffect(() => {
-  //   if (brands.length > 0 && brandOnSearch) {
-  //     const brandId = brands.find((brand) => brand.name === brandOnSearch)?.id
-
-  //     if (!brandId) return
-  //     getModels(brandId)
-  //   }
-  // }, [brands, brandOnSearch])
 
   return (
     <div className="filters mt-4">
