@@ -34,6 +34,8 @@ export default async function middleware(request: NextRequest) {
     },
   })
 
+  console.log('MIDDLEWARE')
+
   const token = cookies().get('keycloak_access_token')?.value
   const refresh_token = cookies().get('keycloak_refresh_token')?.value
 
@@ -46,13 +48,18 @@ export default async function middleware(request: NextRequest) {
   }
 
   const tokenDecrypted = decrypt(token)
+  console.log('Token INIT MIDD', tokenDecrypted)
 
   const tokenDecoded = jwtDecode(tokenDecrypted)
+
+  // console.log('Token decoded', tokenDecoded)
 
   const expires = tokenDecoded.exp ?? 0
 
   if (expires < Date.now() / 1000) {
+    console.log('Token expired')
     const resp = await refreshToken(refresh_token)
+    console.log('Refresh token REFRESHED ON MIDDLEWARE', resp.access_token)
 
     if (!resp.access_token) {
       response.cookies.delete('keycloak_access_token')
@@ -61,6 +68,7 @@ export default async function middleware(request: NextRequest) {
       response.cookies.delete('session')
       return response
     } else {
+      console.log('setting cookies')
       response.cookies.set('keycloak_access_token', encrypt(resp.access_token))
       response.cookies.set('keycloak_refresh_token', resp.refresh_token)
       response.cookies.set('keycloak_id_token', encrypt(resp.id_token))
@@ -75,12 +83,16 @@ export default async function middleware(request: NextRequest) {
       }
 
       response.cookies.set('session', JSON.stringify(session))
+
+      return response
     }
   }
+
+  console.log('Token not expired')
 
   return response
 }
 
 export const config = {
-  matcher: ['/((?!api|_next/static|_next/image|favicon.ico).*)'],
+  matcher: ['/((?!_next/static|_next/image|favicon.ico).*)'],
 }

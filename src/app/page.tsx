@@ -6,6 +6,7 @@ import {
 import Image from 'next/image'
 
 import { HomeFilters } from '@/components/home-filters'
+import { getSession } from '@/data/actions/auth'
 import { fetchBrands } from '@/data/actions/fetch-brands'
 
 import CarImage from '../../public/car.webp'
@@ -17,6 +18,10 @@ export default async function Home() {
     queryKey: ['brands'],
     queryFn: async () => fetchBrands(),
   })
+
+  const session = await getSession()
+
+  console.log(session)
 
   return (
     <main className="flex flex-col">

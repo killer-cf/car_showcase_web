@@ -1,10 +1,10 @@
-import { cookies } from 'next/headers'
-import { NextResponse } from 'next/server'
-import { env } from '@/env'
-import { encrypt } from '@/utils/encryption'
 import { jwtDecode } from 'jwt-decode'
+import { revalidatePath } from 'next/cache'
+import { NextResponse } from 'next/server'
+
+import { getSession } from '@/data/actions/auth'
 import { KeycloakToken } from '@/data/types/keycloak-token'
-import { Session } from '@/data/types/session'
+import { env } from '@/env'
 
 export async function GET(request: Request) {
   const { searchParams, origin } = new URL(request.url)
@@ -29,20 +29,32 @@ export async function GET(request: Request) {
 
     const token = await tokenResponse.json()
 
-    cookies().set('keycloak_access_token', encrypt(token.access_token))
-    cookies().set('keycloak_refresh_token', token.refresh_token)
-    cookies().set('keycloak_id_token', encrypt(token.id_token))
-
+    const session = await getSession()
     const tokenDecoded: KeycloakToken = jwtDecode(token.access_token)
 
-    const session: Session = {
-      id: tokenDecoded.sub,
-      email: tokenDecoded.email,
-      name: tokenDecoded.name,
-      expires: tokenDecoded.exp,
-    }
+    session.username = token.username ?? ''
+    session.email = tokenDecoded.email
+    session.username = tokenDecoded.name
+    session.isLoggedIn = true
+    session.accessToken = token.access_token
+    session.refreshToken = token.refresh_token
+    session.idToken = token.id_token
+    session.expires = tokenDecoded.exp
+    await session.save()
+    revalidatePath('/')
 
-    cookies().set('session', JSON.stringify(session))
+    // cookies().set('keycloak_access_token', encrypt(token.access_token))
+    // cookies().set('keycloak_refresh_token', token.refresh_token)
+    // cookies().set('keycloak_id_token', encrypt(token.id_token))
+
+    // const session: Session = {
+    //   id: tokenDecoded.sub,
+    //   email: tokenDecoded.email,
+    //   name: tokenDecoded.name,
+    //   expires: tokenDecoded.exp,
+    // }
+
+    // cookies().set('session', JSON.stringify(session))
 
     return NextResponse.redirect(`${origin}${next}`)
   }

@@ -1,13 +1,15 @@
-import { env } from '@/env'
-import { decrypt } from '@/utils/encryption'
-import { cookies } from 'next/headers'
+import { revalidatePath } from 'next/cache'
 import { redirect } from 'next/navigation'
 
-export async function GET() {
-  const accessToken = cookies().get('keycloak_access_token')?.value
+import { getSession } from '@/data/actions/auth'
+import { env } from '@/env'
+import { decrypt } from '@/utils/encryption'
 
-  if (accessToken) {
-    const idToken = cookies().get('keycloak_id_token')?.value
+export async function GET() {
+  const session = await getSession(false)
+
+  if (session) {
+    const idToken = session.idToken
 
     if (!idToken) {
       redirect(env.NEXT_PUBLIC_APP_URL)
@@ -26,10 +28,9 @@ export async function GET() {
       if (!resp.ok) {
         throw new Error(`HTTP error! status: ${resp.status}`)
       }
-      cookies().delete('keycloak_access_token')
-      cookies().delete('keycloak_refresh_token')
-      cookies().delete('keycloak_id_token')
-      cookies().delete('session')
+      const session = await getSession(false)
+      session.destroy()
+      revalidatePath('/')
       return new Response(null, { status: 200 })
     } catch (err) {
       console.error(err)

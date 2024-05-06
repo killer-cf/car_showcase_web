@@ -1,11 +1,19 @@
 'use client'
 
+import { IronSession } from 'iron-session'
 import { useRouter } from 'next/navigation'
 
+import { SessionData } from '@/lib/iron-session'
 import { useSession, useSessionStore } from '@/stores/session'
 
-export default function AuthStatus() {
-  const session = useSession()
+interface AuthStatusProps {
+  session: IronSession<SessionData>
+}
+
+export default function AuthStatus({ session }: AuthStatusProps) {
+  // const session = useSession()
+
+  console.log('session', session)
 
   const { logout } = useSessionStore((state) => {
     return { logout: state.logout }
@@ -22,11 +30,10 @@ export default function AuthStatus() {
     router.refresh()
   }
 
-  if (session.user) {
+  if (session.isLoggedIn) {
     return (
       <div className="my-3">
-        Logged in as{' '}
-        <span className="text-yellow-100">{session.user?.email}</span>{' '}
+        Logged in as <span className="text-yellow-100">{session.email}</span>{' '}
         <button
           className="bg-blue-900 font-bold text-white py-1 px-2 rounded border border-gray-50"
           onClick={handleLogout}

@@ -1,3 +1,4 @@
+'use server'
 import { jwtDecode } from 'jwt-decode'
 
 import { getSession, updateSession } from '@/data/actions/auth'
@@ -23,20 +24,15 @@ async function refreshToken(refreshToken: string) {
   return resp
 }
 
-export async function POST(request: Request) {
-  const body = await request.json()
+export async function updateToken(refreshT: string) {
   const session = await getSession()
 
-  const resp = await refreshToken(body.refresh_token)
+  const resp = await refreshToken(refreshT)
 
   if (!resp.access_token) {
     session.destroy()
-    // cookies().delete('keycloak_access_token')
-    // cookies().delete('keycloak_refresh_token')
-    // cookies().delete('keycloak_id_token')
-    // cookies().delete('session')
 
-    return new Response(null, { status: 204 })
+    return { access_token: null }
   } else {
     const tokenDecoded: KeycloakToken = jwtDecode(resp.access_token)
 
@@ -45,22 +41,9 @@ export async function POST(request: Request) {
       username: tokenDecoded.name,
       email: tokenDecoded.email,
       accessToken: resp.access_token,
-      refreshToken: body.refresh_token,
-      idToken: tokenDecoded.id_token,
+      refreshToken: resp.refresh_token,
       expires: tokenDecoded.exp,
     })
-    // cookies().set('keycloak_access_token', encrypt(resp.access_token))
-    // cookies().set('keycloak_refresh_token', resp.refresh_token)
-    // cookies().set('keycloak_id_token', encrypt(resp.id_token))
-
-    // const session: User = {
-    //   id: tokenDecoded.sub,
-    //   email: tokenDecoded.email,
-    //   name: tokenDecoded.name,
-    //   expires: tokenDecoded.exp,
-    // }
-
-    // cookies().set('session', JSON.stringify(session))
   }
   return { access_token: resp.access_token }
 }

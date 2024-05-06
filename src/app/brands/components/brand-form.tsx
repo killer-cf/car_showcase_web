@@ -51,6 +51,8 @@ export function BrandForm({ isEditing = false, brand }: BrandFormProps) {
       body: JSON.stringify(data),
     }).then((res) => res.json())
 
+    console.log(response)
+
     return response
   }
 

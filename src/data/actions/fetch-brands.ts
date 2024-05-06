@@ -11,25 +11,18 @@ export type ResponseData = {
   message: string
 }
 
-export async function fetchBrands(
-  page: number = 1,
-  perPage: number = 20,
-): Promise<ResponseData> {
+export async function fetchBrands(): Promise<ResponseData> {
   try {
-    const response = await api(
-      `api/v1/brands?page=${page}&per_page=${perPage}`,
-      {
-        next: {
-          revalidate: 60 * 60 * 24,
-          tags: [`Brands:${page}:${perPage}`, 'Brands'],
-        },
+    const response = await api(`api/v1/brands`, {
+      next: {
+        revalidate: 60 * 60 * 24,
+        tags: ['Brands'],
       },
-    ).then((res) => res.json())
+    }).then((res) => res.json())
 
     if (response.status === 200) {
       return {
         brands: response.data.brands,
-        meta: response.data.meta,
         statusCode: response.status,
         message: 'OK',
       }

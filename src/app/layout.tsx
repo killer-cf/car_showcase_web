@@ -9,8 +9,6 @@ import { Header } from '@/components/header'
 import Providers from '@/lib/query-provider'
 import { cn } from '@/lib/utils'
 
-import SessionProvider from './providers/session-provider'
-
 const fontSans = FontSans({
   subsets: ['latin'],
   variable: '--font-sans',
@@ -50,36 +48,34 @@ export default function RootLayout({
 }>) {
   return (
     <html lang="pt-BR">
-      <SessionProvider>
-        <body
-          className={cn(
-            'min-h-screen bg-background font-sans antialiased',
-            fontSans.variable,
-            fontApercu.variable,
-          )}
-        >
-          <Providers>
-            <div>
-              <Header />
-              {children}
-            </div>
-            <div className="absolute top-0 right-0 ">
-              <ToastContainer
-                position="top-right"
-                autoClose={5000}
-                hideProgressBar={false}
-                newestOnTop={false}
-                closeOnClick
-                rtl={false}
-                pauseOnFocusLoss
-                draggable
-                pauseOnHover
-                theme="dark"
-              />
-            </div>
-          </Providers>
-        </body>
-      </SessionProvider>
+      <body
+        className={cn(
+          'min-h-screen bg-background font-sans antialiased',
+          fontSans.variable,
+          fontApercu.variable,
+        )}
+      >
+        <Providers>
+          <div>
+            <Header />
+            {children}
+          </div>
+          <div className="absolute top-0 right-0 ">
+            <ToastContainer
+              position="top-right"
+              autoClose={5000}
+              hideProgressBar={false}
+              newestOnTop={false}
+              closeOnClick
+              rtl={false}
+              pauseOnFocusLoss
+              draggable
+              pauseOnHover
+              theme="dark"
+            />
+          </div>
+        </Providers>
+      </body>
     </html>
   )
 }

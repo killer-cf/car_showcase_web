@@ -1,8 +1,9 @@
-'use server'
+// 'use server'
 
-import { decrypt } from '@/utils/encryption'
 import { jwtDecode } from 'jwt-decode'
 import { cookies } from 'next/headers'
+
+import { decrypt } from '@/utils/encryption'
 
 export async function getAccessToken(): Promise<string | null> {
   const refresh_token = cookies().get('keycloak_refresh_token')?.value
@@ -18,6 +19,8 @@ export async function getAccessToken(): Promise<string | null> {
   }
 
   const tokenDecrypted = decrypt(token)
+
+  console.log('Token decrypted get at ', tokenDecrypted)
 
   const tokenDecoded = jwtDecode(tokenDecrypted)
 
