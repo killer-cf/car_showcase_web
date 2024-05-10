@@ -1,20 +1,10 @@
 import Link from 'next/link'
-import { redirect } from 'next/navigation'
 
 import { Button } from '@/components/ui/button'
-import { getSession } from '@/data/actions/auth'
 
 import { BrandsList } from './components/brand-list'
 
 export default async function BrandsPage() {
-  const session = await getSession()
-
-  console.log('session', session)
-
-  if (!session.isLoggedIn) {
-    redirect('/')
-  }
-
   return (
     <main className="flex min-h-screen flex-col items-center max-w-6xl m-auto p-5">
       <div className="mb-20">

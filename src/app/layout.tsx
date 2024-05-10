@@ -5,9 +5,12 @@ import { Inter as FontSans } from 'next/font/google'
 import localFont from 'next/font/local'
 import { ToastContainer } from 'react-toastify'
 
+import { auth } from '@/auth'
 import { Header } from '@/components/header'
 import Providers from '@/lib/query-provider'
 import { cn } from '@/lib/utils'
+
+import SessionProvider from './providers/session-provider'
 
 const fontSans = FontSans({
   subsets: ['latin'],
@@ -41,11 +44,12 @@ export const metadata: Metadata = {
   description: 'The best place to buy and sell cars',
 }
 
-export default function RootLayout({
+export default async function RootLayout({
   children,
 }: Readonly<{
   children: React.ReactNode
 }>) {
+  const session = await auth()
   return (
     <html lang="pt-BR">
       <body
@@ -55,26 +59,28 @@ export default function RootLayout({
           fontApercu.variable,
         )}
       >
-        <Providers>
-          <div>
-            <Header />
-            {children}
-          </div>
-          <div className="absolute top-0 right-0 ">
-            <ToastContainer
-              position="top-right"
-              autoClose={5000}
-              hideProgressBar={false}
-              newestOnTop={false}
-              closeOnClick
-              rtl={false}
-              pauseOnFocusLoss
-              draggable
-              pauseOnHover
-              theme="dark"
-            />
-          </div>
-        </Providers>
+        <SessionProvider session={session}>
+          <Providers>
+            <div>
+              <Header />
+              {children}
+            </div>
+            <div className="absolute top-0 right-0 ">
+              <ToastContainer
+                position="top-right"
+                autoClose={5000}
+                hideProgressBar={false}
+                newestOnTop={false}
+                closeOnClick
+                rtl={false}
+                pauseOnFocusLoss
+                draggable
+                pauseOnHover
+                theme="dark"
+              />
+            </div>
+          </Providers>
+        </SessionProvider>
       </body>
     </html>
   )

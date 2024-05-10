@@ -1,30 +1,23 @@
 'use client'
 
-import { useEffect } from 'react'
+import { Session } from 'next-auth'
+import { SessionProvider as AuthSessionProvider } from 'next-auth/react'
 
-import { updateToken } from '@/data/actions/refresh-token'
+import { SessionMonitor } from '@/utils/session-monitor'
 
 interface SessionProviderProps {
   children: React.ReactNode
+  session: Session | null
 }
 
-export default function SessionProvider({ children }: SessionProviderProps) {
-  // const { clearSession, setSession } = useSessionStore((state) => {
-  //   return { clearSession: state.clearSession, setSession: state.setSession }
-  // })
-
-  // const router = useRouter()
-
-  useEffect(() => {
-    const checkSession = async () => {
-      if (session.isLoggedIn && session.expires > Date.now() / 1000) {
-        await updateToken(session.refreshToken)
-        // router.refresh()
-      }
-    }
-
-    checkSession()
-  }, [session])
-
-  return children
+export default function SessionProvider({
+  children,
+  session,
+}: SessionProviderProps) {
+  return (
+    <AuthSessionProvider session={session}>
+      <SessionMonitor />
+      {children}
+    </AuthSessionProvider>
+  )
 }

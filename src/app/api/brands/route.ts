@@ -1,30 +1,19 @@
 import { revalidateTag } from 'next/cache'
 import { NextRequest } from 'next/server'
 
-import { getSession } from '@/data/actions/auth'
-import { updateToken } from '@/data/actions/refresh-token'
+import { auth } from '@/auth'
 import { api } from '@/data/api'
 
 export async function POST(request: NextRequest) {
   const data = await request.json()
 
-  const session = await getSession()
+  const session = await auth()
 
-  if (!session.isLoggedIn) {
+  if (!session || session.error) {
     return Response.json({ status: 401, error: 'Unauthorized' })
   }
 
-  let accessToken = session.accessToken
-
-  if (session.expires < Date.now() / 1000) {
-    const res = await updateToken(session.refreshToken)
-
-    if (!res.access_token) {
-      return Response.json({ status: 401, error: 'Unauthorized' })
-    }
-
-    accessToken = res.access_token
-  }
+  const accessToken = session.access_token
 
   const response = await api('/api/v1/brands', {
     method: 'POST',

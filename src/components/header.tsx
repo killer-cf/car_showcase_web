@@ -2,15 +2,11 @@ import { User } from 'lucide-react'
 import Image from 'next/image'
 import Link from 'next/link'
 
-import { getSession } from '@/data/actions/auth'
-
 import Logo from '../../public/logo_size.jpg'
 import AuthStatus from './auth-status'
 import { Button } from './ui/button'
 
 export async function Header() {
-  const session = await getSession()
-
   return (
     <header className="flex items-center bg-background max-w-6xl m-auto">
       <Image src={Logo} width={70} height={70} alt="logo" />
@@ -25,7 +21,7 @@ export async function Header() {
           <Button variant="link" className="text-md">
             <Link href={'/brands'}>Marcas</Link>
           </Button>
-          <AuthStatus session={session} />
+          <AuthStatus />
         </div>
 
         <div>
