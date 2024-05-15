@@ -7,9 +7,10 @@ import localFont from 'next/font/local'
 import { ToastContainer } from 'react-toastify'
 
 import { Header } from '@/components/header'
-import Providers from '@/lib/query-provider'
 import { cn } from '@/lib/utils'
 import { AutoLogout } from '@/utils/auto-logout'
+
+import { Providers } from './providers'
 
 const fontSans = FontSans({
   subsets: ['latin'],

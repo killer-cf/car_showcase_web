@@ -1,8 +1,8 @@
 'use server'
 
-import { api } from '../api'
-import { Brand } from '../types/brand'
-import { Metadata } from '../types/metadata'
+import { api } from '../data/api'
+import { Brand } from '../data/types/brand'
+import { Metadata } from '../data/types/metadata'
 
 export type ResponseData = {
   brands: Brand[]

@@ -22,9 +22,7 @@ export async function Header() {
           </Button>
         </div>
 
-        <div>
-          <Auth />
-        </div>
+        <Auth />
       </nav>
     </header>
   )

@@ -1,6 +1,6 @@
-import { api } from '../api'
-import { Car } from '../types/car'
-import { Metadata } from '../types/metadata'
+import { api } from '../data/api'
+import { Car } from '../data/types/car'
+import { Metadata } from '../data/types/metadata'
 
 type ResponseData = {
   cars?: Car[]

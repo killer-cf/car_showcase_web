@@ -5,8 +5,8 @@ import {
 } from '@tanstack/react-query'
 import Image from 'next/image'
 
+import { fetchBrands } from '@/actions/fetch-brands'
 import { HomeFilters } from '@/components/home-filters'
-import { fetchBrands } from '@/data/actions/fetch-brands'
 
 import CarImage from '../../public/car.webp'
 

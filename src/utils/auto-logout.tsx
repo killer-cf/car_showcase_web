@@ -4,7 +4,7 @@ import { usePathname } from 'next/navigation'
 import { signOut } from 'next-auth/react'
 import { useEffect } from 'react'
 
-import { useSession } from '@/data/uses/use-session'
+import { useSession } from '@/hooks/use-session'
 
 export function AutoLogout() {
   const { data: session, refetch } = useSession()

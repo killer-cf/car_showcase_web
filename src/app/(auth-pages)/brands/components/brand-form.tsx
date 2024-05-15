@@ -6,6 +6,7 @@ import { useForm } from 'react-hook-form'
 import { toast } from 'react-toastify'
 import { z } from 'zod'
 
+import { ResponseData } from '@/actions/fetch-brands'
 import { Button } from '@/components/ui/button'
 import {
   Form,
@@ -16,7 +17,6 @@ import {
   FormMessage,
 } from '@/components/ui/form'
 import { Input } from '@/components/ui/input'
-import { ResponseData } from '@/data/actions/fetch-brands'
 import { Brand } from '@/data/types/brand'
 
 const createBrandFormSchema = z.object({

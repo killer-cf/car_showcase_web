@@ -1,8 +1,8 @@
 'use server'
 
-import { api } from '../api'
-import { Metadata } from '../types/metadata'
-import { Model } from '../types/model'
+import { api } from '../data/api'
+import { Metadata } from '../data/types/metadata'
+import { Model } from '../data/types/model'
 
 type ResponseData = {
   models: Model[]

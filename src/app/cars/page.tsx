@@ -10,7 +10,7 @@ import {
   SelectValue,
 } from '@/components/ui/select'
 
-import { fetchCars } from '../../data/actions/fetch-cars'
+import { fetchCars } from '../../actions/fetch-cars'
 import { Filters } from './components/filters'
 
 interface CarsPageProps {

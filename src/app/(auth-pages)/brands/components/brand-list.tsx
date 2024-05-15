@@ -1,7 +1,7 @@
 'use client'
 
 import { DataTable } from '@/components/data-table'
-import { useFetchBrands } from '@/data/uses/use-fetch-brands'
+import { useFetchBrands } from '@/hooks/use-fetch-brands'
 
 import { brandsColumns } from './brands-columns'
 

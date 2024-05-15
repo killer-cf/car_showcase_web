@@ -25,8 +25,8 @@ import {
   SelectValue,
 } from '@/components/ui/select'
 import { Car } from '@/data/types/car'
-import { useFetchBrandModels } from '@/data/uses/use-fetch-brand-models'
-import { useFetchBrands } from '@/data/uses/use-fetch-brands'
+import { useFetchBrandModels } from '@/hooks/use-fetch-brand-models'
+import { useFetchBrands } from '@/hooks/use-fetch-brands'
 
 import { Switch } from './ui/switch'
 
