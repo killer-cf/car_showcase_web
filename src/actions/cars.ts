@@ -4,9 +4,8 @@ import { revalidatePath } from 'next/cache'
 import { createSafeActionClient } from 'next-safe-action'
 import { z } from 'zod'
 
-import { auth } from '@/auth'
 import { api } from '@/data/api'
-import { decrypt } from '@/utils/encryption'
+import { getToken } from '@/utils/get-token'
 
 const action = createSafeActionClient()
 
@@ -15,13 +14,9 @@ const deleteSchema = z.object({
 })
 export const deleteCar = action(deleteSchema, async ({ id }) => {
   try {
-    const session = await auth()
+    const { accessToken } = await getToken()
 
-    if (!session || session.error) {
-      return { error: 'Token expired or no session' }
-    }
-
-    const accessToken = decrypt(session.access_token ?? '')
+    if (!accessToken) return { error: 'Token expired or no session' }
 
     await api(`/api/v1/cars/${id}`, {
       method: 'DELETE',

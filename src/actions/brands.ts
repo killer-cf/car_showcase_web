@@ -3,23 +3,18 @@
 import { revalidateTag } from 'next/cache'
 import { z } from 'zod'
 
-import { auth } from '@/auth'
 import { api } from '@/data/api'
 import { actionClient } from '@/lib/safe-action'
-import { decrypt } from '@/utils/encryption'
+import { getToken } from '@/utils/get-token'
 
 const deleteSchema = z.object({
   id: z.string(),
 })
 export const deleteBrand = actionClient(deleteSchema, async ({ id }) => {
   try {
-    const session = await auth()
+    const { accessToken } = await getToken()
 
-    if (!session || session.error) {
-      return { error: 'Token expired or no session' }
-    }
-
-    const accessToken = decrypt(session.access_token ?? '')
+    if (!accessToken) return { error: 'Token expired or no session' }
 
     const res = await api(`/api/v1/brands/${id}`, {
       method: 'DELETE',
