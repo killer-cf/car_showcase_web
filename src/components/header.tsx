@@ -1,9 +1,8 @@
-import { User } from 'lucide-react'
 import Image from 'next/image'
 import Link from 'next/link'
 
 import Logo from '../../public/logo_size.jpg'
-import AuthStatus from './auth-status'
+import { Auth } from './auth'
 import { Button } from './ui/button'
 
 export async function Header() {
@@ -21,14 +20,10 @@ export async function Header() {
           <Button variant="link" className="text-md">
             <Link href={'/brands'}>Marcas</Link>
           </Button>
-          <AuthStatus />
         </div>
 
         <div>
-          <Button variant="link" className="text-md gap-1">
-            <User className="w-5 h-5" />
-            <Link href={'/login'}>Login</Link>
-          </Button>
+          <Auth />
         </div>
       </nav>
     </header>
