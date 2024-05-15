@@ -15,6 +15,8 @@ import {
 } from '@/components/ui/dropdown-menu'
 import { Brand } from '@/data/types/brand'
 
+import { BrandDeleteAction } from './brand-delete-action'
+
 const Header = ({ children }: { children: ReactNode }) => (
   <div className="text-center font-bold">{children}</div>
 )
@@ -39,7 +41,7 @@ export const brandsColumns: ColumnDef<Brand>[] = [
   {
     id: 'actions',
     cell: ({ row }) => {
-      const payment = row.original
+      const brand = row.original
 
       return (
         <DropdownMenu>
@@ -52,14 +54,14 @@ export const brandsColumns: ColumnDef<Brand>[] = [
           <DropdownMenuContent align="end">
             <DropdownMenuLabel>Ações</DropdownMenuLabel>
             <DropdownMenuItem
-              onClick={() => navigator.clipboard.writeText(payment.id)}
+              onClick={() => navigator.clipboard.writeText(brand.id)}
             >
               Copiar ID
             </DropdownMenuItem>
             {/* <DropdownMenuSeparator /> */}
             <DropdownMenuItem>Ver carros</DropdownMenuItem>
             <DropdownMenuItem>Ver modelos</DropdownMenuItem>
-            <DropdownMenuItem>Excluir</DropdownMenuItem>
+            <BrandDeleteAction id={brand.id} />
           </DropdownMenuContent>
         </DropdownMenu>
       )
