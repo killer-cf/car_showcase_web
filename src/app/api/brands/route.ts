@@ -3,6 +3,7 @@ import { NextRequest } from 'next/server'
 
 import { auth } from '@/auth'
 import { api } from '@/data/api'
+import { decrypt } from '@/utils/encryption'
 
 export async function POST(request: NextRequest) {
   const data = await request.json()
@@ -13,7 +14,7 @@ export async function POST(request: NextRequest) {
     return Response.json({ status: 401, error: 'Unauthorized' })
   }
 
-  const accessToken = session.access_token
+  const accessToken = decrypt(session.access_token ?? '')
 
   const response = await api('/api/v1/brands', {
     method: 'POST',

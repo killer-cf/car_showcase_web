@@ -3,9 +3,7 @@ import { auth, signIn, signOut } from '@/auth'
 export default async function AuthStatus() {
   const session = await auth()
 
-  console.log('session no header', session)
-
-  if (session) {
+  if (session && !session.error) {
     return (
       <div className="my-3">
         Logged in as <span className="">{session.user?.email}</span>{' '}

@@ -51,8 +51,6 @@ export function BrandForm({ isEditing = false, brand }: BrandFormProps) {
       body: JSON.stringify(data),
     }).then((res) => res.json())
 
-    console.log(response)
-
     return response
   }
 
@@ -60,7 +58,7 @@ export function BrandForm({ isEditing = false, brand }: BrandFormProps) {
     mutationKey: ['brands'],
     mutationFn: createBrand,
     onSuccess(response) {
-      const newBrand = response.data.brand
+      const newBrand = response.data?.brand
 
       if (!newBrand) {
         return
@@ -78,13 +76,14 @@ export function BrandForm({ isEditing = false, brand }: BrandFormProps) {
   async function handleCreateBrand(data: BrandForm) {
     try {
       const response = await createBrandFn(data)
-      const keys = response.data.errors ? Object.keys(response.data.errors) : []
+      const keys = response.data?.errors
+        ? Object.keys(response.data.errors)
+        : []
 
       switch (response.status) {
         case 201:
           form.reset()
           toast.success('Marca cadastrado com sucesso!')
-          alert('Marca cadastrado com sucesso!')
           break
         case 500:
           toast.error('Erro de servidor')

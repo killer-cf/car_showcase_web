@@ -1,6 +1,5 @@
 import Link from 'next/link'
 
-// import { BackButton } from '@/components/back-button'
 import { BrandForm } from '../components/brand-form'
 
 export default async function NewBrandPage() {

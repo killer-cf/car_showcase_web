@@ -1,16 +1,15 @@
 import './globals.css'
+import 'react-toastify/dist/ReactToastify.css'
 
 import type { Metadata } from 'next'
 import { Inter as FontSans } from 'next/font/google'
 import localFont from 'next/font/local'
 import { ToastContainer } from 'react-toastify'
 
-import { auth } from '@/auth'
 import { Header } from '@/components/header'
 import Providers from '@/lib/query-provider'
 import { cn } from '@/lib/utils'
-
-import SessionProvider from './providers/session-provider'
+import { AutoLogout } from '@/utils/auto-logout'
 
 const fontSans = FontSans({
   subsets: ['latin'],
@@ -44,12 +43,11 @@ export const metadata: Metadata = {
   description: 'The best place to buy and sell cars',
 }
 
-export default async function RootLayout({
+export default function RootLayout({
   children,
 }: Readonly<{
   children: React.ReactNode
 }>) {
-  const session = await auth()
   return (
     <html lang="pt-BR">
       <body
@@ -59,28 +57,27 @@ export default async function RootLayout({
           fontApercu.variable,
         )}
       >
-        <SessionProvider session={session}>
-          <Providers>
-            <div>
-              <Header />
-              {children}
-            </div>
-            <div className="absolute top-0 right-0 ">
-              <ToastContainer
-                position="top-right"
-                autoClose={5000}
-                hideProgressBar={false}
-                newestOnTop={false}
-                closeOnClick
-                rtl={false}
-                pauseOnFocusLoss
-                draggable
-                pauseOnHover
-                theme="dark"
-              />
-            </div>
-          </Providers>
-        </SessionProvider>
+        <Providers>
+          <div>
+            <Header />
+            {children}
+          </div>
+          <div className="absolute top-0 right-0 ">
+            <ToastContainer
+              position="top-right"
+              autoClose={5000}
+              hideProgressBar={false}
+              newestOnTop={false}
+              closeOnClick
+              rtl={false}
+              pauseOnFocusLoss
+              draggable
+              pauseOnHover
+              theme="dark"
+            />
+          </div>
+          <AutoLogout />
+        </Providers>
       </body>
     </html>
   )

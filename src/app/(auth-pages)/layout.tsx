@@ -3,16 +3,12 @@ import { redirect } from 'next/navigation'
 
 import { auth } from '@/auth'
 
-export default async function AuthPageLayout({
+export default async function AuthLayout({
   children,
-}: Readonly<{
+}: {
   children: React.ReactNode
-}>) {
+}) {
   const session = await auth()
-
-  console.log(session)
-
-  console.log('ERROR NO BRANDS PAGE', session?.error)
 
   if (!session || session?.error) {
     revalidatePath('/')

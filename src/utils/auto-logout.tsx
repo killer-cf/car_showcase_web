@@ -1,15 +1,26 @@
 'use client'
 
-import { signOut, useSession } from 'next-auth/react'
+import { usePathname } from 'next/navigation'
+import { signOut } from 'next-auth/react'
 import { useEffect } from 'react'
 
+import { useSession } from '@/data/uses/use-session'
+
 export function AutoLogout() {
-  const { data: session } = useSession()
-  console.log('ERROR NO AUTO PAGE', session?.error)
+  const { data: session, refetch } = useSession()
+
+  const sessionError = session?.error
+
+  const pathName = usePathname()
+
   useEffect(() => {
-    if (session?.error === 'RefreshAccessTokenError') {
-      signOut() // Force sign in to hopefully resolve error
+    refetch()
+  }, [pathName, refetch])
+
+  useEffect(() => {
+    if (sessionError === 'RefreshAccessTokenError') {
+      signOut()
     }
-  }, [session])
+  }, [sessionError])
   return <div></div>
 }

@@ -29,9 +29,9 @@ declare module "next-auth" {
   interface Session {
     error?: string
     user: User & DefaultSession["user"]
-    access_token: string
-    refresh_token: string
-    id_token: string
+    access_token: string | null
+    refresh_token: string | null
+    id_token: string | null
   }
 }
  
