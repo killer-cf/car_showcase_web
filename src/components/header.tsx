@@ -1,11 +1,17 @@
 import Image from 'next/image'
 import Link from 'next/link'
 
+import { auth } from '@/auth'
+
 import Logo from '../../public/logo_size.jpg'
 import { Auth } from './auth'
 import { Button } from './ui/button'
 
 export async function Header() {
+  const session = await auth()
+
+  const isLogged = session && !session.error
+
   return (
     <header className="flex items-center bg-background max-w-6xl m-auto">
       <Image src={Logo} width={70} height={70} alt="logo" />
@@ -17,9 +23,11 @@ export async function Header() {
           <Button variant="link" className="text-md">
             <Link href={'/cars'}>Carros a venda</Link>
           </Button>
-          <Button variant="link" className="text-md">
-            <Link href={'/brands'}>Marcas</Link>
-          </Button>
+          {isLogged && (
+            <Button variant="link" className="text-md">
+              <Link href={'/brands'}>Marcas</Link>
+            </Button>
+          )}
         </div>
 
         <Auth />

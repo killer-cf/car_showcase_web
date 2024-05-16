@@ -1,4 +1,5 @@
 import { PrismaAdapter } from '@auth/prisma-adapter'
+import { jwtDecode } from 'jwt-decode'
 import NextAuth from 'next-auth'
 import Keycloak from 'next-auth/providers/keycloak'
 
@@ -72,6 +73,13 @@ export const { handlers, auth, signIn, signOut } = NextAuth({
             },
           })
 
+          const tokenDecoded = jwtDecode(tokens.access_token)
+
+          session.user = {
+            ...session.user,
+            id: tokenDecoded.sub ?? '',
+          }
+
           session.access_token = encrypt(tokens.access_token)
           session.id_token = encrypt(tokens.id_token)
 
@@ -97,6 +105,12 @@ export const { handlers, auth, signIn, signOut } = NextAuth({
       }
 
       if (keycloakAccount.access_token && keycloakAccount.id_token) {
+        const tokenDecoded = jwtDecode(keycloakAccount.access_token)
+
+        session.user = {
+          ...session.user,
+          id: tokenDecoded.sub ?? '',
+        }
         session.access_token = encrypt(keycloakAccount.access_token)
         session.id_token = encrypt(keycloakAccount.id_token)
       }
