@@ -1,5 +1,9 @@
-export type Brand = {
-  id: string
-  name: string
-  created_at: string
-}
+import { z } from 'zod'
+
+const BrandSchema = z.object({
+  id: z.string(),
+  name: z.string(),
+  created_at: z.string(),
+})
+
+export type Brand = z.infer<typeof BrandSchema>
