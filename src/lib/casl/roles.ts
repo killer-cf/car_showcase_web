@@ -3,7 +3,7 @@ import { z } from 'zod'
 export const roleSchema = z.union([
   z.literal('SUPER'),
   z.literal('ADMIN'),
-  z.literal('MEMBER'),
+  z.literal('USER'),
   z.literal('BILLING'),
 ])
 
