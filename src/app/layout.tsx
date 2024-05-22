@@ -8,7 +8,6 @@ import { ToastContainer } from 'react-toastify'
 
 import { Header } from '@/components/header'
 import { cn } from '@/lib/utils'
-import { AutoLogout } from '@/utils/auto-logout'
 
 import { Providers } from './providers'
 
@@ -77,7 +76,7 @@ export default function RootLayout({
               theme="dark"
             />
           </div>
-          <AutoLogout />
+          {/* <AutoLogout /> */}
         </Providers>
       </body>
     </html>

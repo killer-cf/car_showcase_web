@@ -1,16 +1,18 @@
 import Image from 'next/image'
 import Link from 'next/link'
 
-import { auth } from '@/auth'
+import { createClient } from '@/utils/supabase/server'
 
 import Logo from '../../public/logo_size.jpg'
 import { Auth } from './auth'
 import { Button } from './ui/button'
 
 export async function Header() {
-  const session = await auth()
+  const supabase = createClient()
 
-  const isLogged = session && !session.error
+  const {
+    data: { user },
+  } = await supabase.auth.getUser()
 
   return (
     <header className="flex items-center bg-background max-w-6xl m-auto">
@@ -23,7 +25,7 @@ export async function Header() {
           <Button variant="link" className="text-md">
             <Link href={'/cars'}>Carros a venda</Link>
           </Button>
-          {isLogged && (
+          {user && (
             <Button variant="link" className="text-md">
               <Link href={'/brands'}>Marcas</Link>
             </Button>

@@ -1,49 +1,49 @@
 import { User } from 'lucide-react'
+import Link from 'next/link'
+import { redirect } from 'next/navigation'
 
-import { auth, signIn, signOut } from '@/auth'
+import { createClient } from '@/utils/supabase/server'
 
 import { Button } from './ui/button'
 
 export async function Auth() {
-  const session = await auth()
+  const supabase = createClient()
 
-  if (session && !session.error) {
-    return (
-      <div className="flex items-center">
-        <p>
-          Olá, <span>{session.user?.name}</span>
-        </p>
-        <form
-          action={async () => {
-            'use server'
-            await signOut()
-          }}
-        >
-          <Button
-            variant="link"
-            className="text-md gap-1 text-red-600"
-            type="submit"
-          >
-            Sair
-          </Button>
-        </form>
-      </div>
-    )
+  const {
+    data: { user },
+  } = await supabase.auth.getUser()
+
+  const signOut = async () => {
+    'use server'
+
+    const supabase = createClient()
+    await supabase.auth.signOut()
+    return redirect('/login')
   }
 
-  return (
+  return user ? (
+    <div className="flex items-center">
+      <p>
+        Olá, <span>{user.email}</span>
+      </p>
+      <form action={signOut}>
+        <Button
+          variant="link"
+          className="text-md gap-1 text-red-600"
+          type="submit"
+        >
+          Sair
+        </Button>
+      </form>
+    </div>
+  ) : (
     <div>
-      <form
-        action={async () => {
-          'use server'
-          await signIn('keycloak')
-        }}
-      >
+      <Link href="/login">
         <Button variant="link" className="text-md gap-1" type="submit">
           <User className="w-5 h-5" />
           Login
         </Button>
-      </form>
+      </Link>
     </div>
   )
 }
