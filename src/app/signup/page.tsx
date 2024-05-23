@@ -1,7 +1,9 @@
 'use client'
 
 import { zodResolver } from '@hookform/resolvers/zod'
+import Link from 'next/link'
 import { useForm } from 'react-hook-form'
+import { toast } from 'react-toastify'
 import { z } from 'zod'
 
 import { Button } from '@/components/ui/button'
@@ -15,7 +17,10 @@ import {
   FormMessage,
 } from '@/components/ui/form'
 import { Input } from '@/components/ui/input'
+import { api } from '@/data/api'
+import { env } from '@/env'
 import { formatCPForCNPJ } from '@/utils/format-cpf-cnpj'
+import { createClient } from '@/utils/supabase/client'
 
 const signUpFormSchema = z
   .object({
@@ -62,12 +67,47 @@ export default function SignUpPage() {
     },
   })
 
-  async function createUser(data: SignUpForm) {
-    console.log(data)
+  const supabase = createClient()
+
+  async function createUser({ email, name, password, tax_id }: SignUpForm) {
+    const { error, data } = await supabase.auth.signUp({
+      email,
+      password,
+      options: {
+        emailRedirectTo: `${env.NEXT_PUBLIC_APP_URL}/auth/callback`,
+      },
+    })
+
+    console.log('data', data)
+
+    if (error) {
+      toast.error(error.message)
+      return
+    }
+
+    const res = await api('/api/v1/users', {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json',
+      },
+      body: JSON.stringify({
+        user: {
+          email,
+          name,
+          tax_id,
+          supabase_id: data.user?.id,
+        },
+      }),
+    })
+
+    form.reset()
+
+    console.log('res', res)
   }
 
   return (
-    <div className="flex justify-center">
+    <div className="flex flex-col justify-center items-center">
+      <h2 className="font-bold text-3xl mt-10">Cadastro</h2>
       <Form {...form}>
         <form
           onSubmit={form.handleSubmit(createUser)}
@@ -132,7 +172,7 @@ export default function SignUpPage() {
               <FormItem>
                 <FormLabel className="text-lg">Senha</FormLabel>
                 <FormControl>
-                  <Input type="text" {...field} />
+                  <Input type="password" {...field} />
                 </FormControl>
                 <FormMessage />
               </FormItem>
@@ -146,7 +186,7 @@ export default function SignUpPage() {
               <FormItem>
                 <FormLabel className="text-lg">Confirme a senha</FormLabel>
                 <FormControl>
-                  <Input type="text" {...field} />
+                  <Input type="password" {...field} />
                 </FormControl>
                 <FormMessage />
               </FormItem>
@@ -162,6 +202,21 @@ export default function SignUpPage() {
           </Button>
         </form>
       </Form>
+
+      {form.formState.isSubmitSuccessful && (
+        <div>
+          <p className="font-bold">
+            Cheque seu email para confirmar o cadastro
+          </p>
+        </div>
+      )}
+
+      <div className="flex flex-col items-center p-4">
+        Já tem uma conta?{' '}
+        <Link href="/login">
+          <Button variant={'link'}>Entrar</Button>
+        </Link>
+      </div>
     </div>
   )
 }

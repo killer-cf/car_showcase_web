@@ -1,22 +1,43 @@
-import { headers } from 'next/headers'
-import Link from 'next/link'
-import { redirect } from 'next/navigation'
+'use client'
 
-import { createClient } from '@/utils/supabase/server'
+import { zodResolver } from '@hookform/resolvers/zod'
+import Link from 'next/link'
+import { useRouter } from 'next/navigation'
+import { useForm } from 'react-hook-form'
+import { toast } from 'react-toastify'
+import { z } from 'zod'
+
+import { Button } from '@/components/ui/button'
+import {
+  Form,
+  FormControl,
+  FormField,
+  FormItem,
+  FormLabel,
+  FormMessage,
+} from '@/components/ui/form'
+import { Input } from '@/components/ui/input'
+import { createClient } from '@/utils/supabase/client'
 
 import { ResendButton } from './resend-button'
-import { SubmitButton } from './submit-button'
 
-export default function Login({
-  searchParams,
-}: {
-  searchParams: { message: string }
-}) {
-  const signIn = async (formData: FormData) => {
-    'use server'
+const signInFormSchema = z.object({
+  email: z.string().email('Email inválido'),
+  password: z
+    .string()
+    .min(8, 'Senha é obrigatória, informe no mínimo 8 caracteres'),
+})
 
-    const email = formData.get('email') as string
-    const password = formData.get('password') as string
+type SignInForm = z.infer<typeof signInFormSchema>
+
+export default function LoginPage() {
+  const form = useForm<SignInForm>({
+    resolver: zodResolver(signInFormSchema),
+  })
+
+  const router = useRouter()
+
+  async function signIn({ email, password }: SignInForm) {
     const supabase = createClient()
 
     const { error } = await supabase.auth.signInWithPassword({
@@ -25,118 +46,70 @@ export default function Login({
     })
 
     if (error) {
-      console.log('error', error)
-      return redirect(`/login?message=${error.message}&email=${email}`)
+      toast.error(error.message)
     }
 
-    return redirect('/protected')
+    router.push('/')
+    router.refresh()
+    toast.success('Login efetuado com sucesso!')
   }
 
-  const signUp = async (formData: FormData) => {
-    'use server'
-
-    const origin = headers().get('origin')
-    const email = formData.get('email') as string
-    const password = formData.get('password') as string
-    const supabase = createClient()
-
-    const { error, data } = await supabase.auth.signUp({
-      email,
-      password,
-      options: {
-        emailRedirectTo: `${origin}/auth/callback`,
-      },
-    })
-
-    console.log('data', data)
-
-    if (error) {
-      return redirect('/login?message=Could not authenticate user')
-    }
-
-    const res = await fetch('http://localhost:3333/users', {
-      method: 'POST',
-      headers: {
-        'Content-Type': 'application/json',
-      },
-      body: JSON.stringify({
-        user: {
-          email,
-          name: 'User',
-          supabase_id: data.user?.id,
-        },
-      }),
-    })
-
-    console.log('res', res)
-
-    return redirect('/login?message=Check email to continue sign in process')
-  }
+  const email = form.watch('email')
 
   return (
-    <div className="flex-1 flex flex-col w-full px-8 sm:max-w-md justify-center gap-2">
-      <Link
-        href="/"
-        className="absolute left-8 top-8 py-2 px-4 rounded-md no-underline text-foreground bg-btn-background hover:bg-btn-background-hover flex items-center group text-sm"
-      >
-        <svg
-          xmlns="http://www.w3.org/2000/svg"
-          width="24"
-          height="24"
-          viewBox="0 0 24 24"
-          fill="none"
-          stroke="currentColor"
-          strokeWidth="2"
-          strokeLinecap="round"
-          strokeLinejoin="round"
-          className="mr-2 h-4 w-4 transition-transform group-hover:-translate-x-1"
+    <div className="flex flex-col justify-center items-center">
+      <h2 className="font-bold text-3xl mt-10">Entrar</h2>
+      <Form {...form}>
+        <form
+          onSubmit={form.handleSubmit(signIn)}
+          className="space-y-5 w-[600px] p-16 rounded-xl"
         >
-          <polyline points="15 18 9 12 15 6" />
-        </svg>{' '}
-        Back
-      </Link>
+          <FormField
+            name="email"
+            control={form.control}
+            render={({ field }) => (
+              <FormItem>
+                <FormLabel className="text-lg">Email</FormLabel>
+                <FormControl>
+                  <Input type="text" {...field} />
+                </FormControl>
+                <FormMessage />
+              </FormItem>
+            )}
+          />
 
-      <form className="animate-in flex-1 flex flex-col w-full justify-center gap-2 text-foreground">
-        <label className="text-md" htmlFor="email">
-          Email
-        </label>
-        <input
-          className="rounded-md px-4 py-2 bg-inherit border mb-6"
-          name="email"
-          placeholder="you@example.com"
-          required
-        />
-        <label className="text-md" htmlFor="password">
-          Password
-        </label>
-        <input
-          className="rounded-md px-4 py-2 bg-inherit border mb-6"
-          type="password"
-          name="password"
-          placeholder="••••••••"
-          required
-        />
-        <SubmitButton
-          formAction={signIn}
-          className="bg-green-700 rounded-md px-4 py-2 text-foreground mb-2"
-          pendingText="Signing In..."
-        >
-          Sign In
-        </SubmitButton>
-        <SubmitButton
-          formAction={signUp}
-          className="border border-foreground/20 rounded-md px-4 py-2 text-foreground mb-2"
-          pendingText="Signing Up..."
-        >
-          Sign Up
-        </SubmitButton>
-        {searchParams?.message && (
-          <p className="mt-4 p-4 bg-foreground/10 text-foreground text-center">
-            {searchParams.message}
-          </p>
-        )}
-        <ResendButton />
-      </form>
+          <FormField
+            name="password"
+            control={form.control}
+            render={({ field }) => (
+              <FormItem>
+                <FormLabel className="text-lg">Senha</FormLabel>
+                <FormControl>
+                  <Input type="password" {...field} />
+                </FormControl>
+                <FormMessage />
+              </FormItem>
+            )}
+          />
+
+          <Button
+            type="submit"
+            disabled={form.formState.isSubmitting}
+            variant="default"
+          >
+            Entrar
+          </Button>
+        </form>
+      </Form>
+
+      {email && <ResendButton email={email} />}
+
+      <div className="flex flex-col items-center p-4">
+        Não tem uma conta?{' '}
+        <Link href="/signup">
+          <Button variant={'link'}>Cadastrar-se</Button>
+        </Link>
+      </div>
     </div>
   )
 }

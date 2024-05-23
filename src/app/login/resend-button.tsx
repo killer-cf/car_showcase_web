@@ -1,13 +1,13 @@
 'use client'
 
-import { useSearchParams } from 'next/navigation'
-
 import { createClient } from '@/utils/supabase/client'
 
-export const ResendButton = () => {
+interface ResendButtonProps {
+  email: string
+}
+
+export const ResendButton = ({ email }: ResendButtonProps) => {
   const supabase = createClient()
-  const params = useSearchParams()
-  const email = params.get('email')
 
   async function resendEmailConfirmation() {
     if (!email) return
@@ -29,7 +29,7 @@ export const ResendButton = () => {
 
   return (
     <button onClick={resendEmailConfirmation} disabled={!email}>
-      Resend email confirmation
+      Reenviar email de confirmação
     </button>
   )
 }
