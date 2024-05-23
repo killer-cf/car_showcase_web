@@ -14,8 +14,6 @@ export async function Header() {
     data: { user },
   } = await supabase.auth.getUser()
 
-  console.log('user on header', user)
-
   return (
     <header className="flex items-center bg-background max-w-6xl m-auto">
       <Image src={Logo} width={70} height={70} alt="logo" />

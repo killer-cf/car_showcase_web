@@ -12,8 +12,6 @@ export const ResendButton = ({ email }: ResendButtonProps) => {
   async function resendEmailConfirmation() {
     if (!email) return
 
-    console.log('email', email)
-
     const { error } = await supabase.auth.resend({
       email,
       type: 'signup',

@@ -78,8 +78,6 @@ export default function SignUpPage() {
       },
     })
 
-    console.log('data', data)
-
     if (error) {
       toast.error(error.message)
       return
@@ -101,8 +99,6 @@ export default function SignUpPage() {
     })
 
     form.reset()
-
-    console.log('res', res)
   }
 
   return (
