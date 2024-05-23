@@ -76,7 +76,6 @@ export default function RootLayout({
               theme="dark"
             />
           </div>
-          {/* <AutoLogout /> */}
         </Providers>
       </body>
     </html>
