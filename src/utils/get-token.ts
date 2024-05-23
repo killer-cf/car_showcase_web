@@ -1,17 +1,19 @@
 import 'server-only'
 
-import { auth } from '@/auth'
-
-import { decrypt } from './encryption'
+import { createClient } from './supabase/server'
 
 export async function getToken() {
-  const session = await auth()
+  const supabase = createClient()
+
+  const {
+    data: { session },
+  } = await supabase.auth.getSession()
 
   if (!session || session.error) {
     return { error: 'Token expired or no session' }
   }
 
-  const accessToken = decrypt(session.access_token ?? '')
+  const accessToken = session?.access_token
 
   return { accessToken, session }
 }

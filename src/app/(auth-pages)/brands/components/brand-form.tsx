@@ -64,7 +64,13 @@ export function BrandForm({ isEditing = false, brand }: BrandFormProps) {
         return
       }
 
-      queryClient.setQueryData(['brands'], (data: ResponseData) => {
+      queryClient.setQueryData(['brands'], (data: ResponseData | undefined) => {
+        if (!data) {
+          return {
+            brands: [newBrand],
+          }
+        }
+
         return {
           brands: [...data.brands, newBrand],
           meta: data.meta,

@@ -1,20 +1,19 @@
 import { revalidateTag } from 'next/cache'
 import { NextRequest } from 'next/server'
 
-import { auth } from '@/auth'
 import { api } from '@/data/api'
-import { decrypt } from '@/utils/encryption'
+import { getToken } from '@/utils/get-token'
 
 export async function POST(request: NextRequest) {
   const data = await request.json()
 
-  const session = await auth()
+  const { accessToken, session } = await getToken()
 
-  if (!session || session.error) {
-    return Response.json({ status: 401, error: 'Unauthorized' })
-  }
-
-  const accessToken = decrypt(session.access_token ?? '')
+  if (!accessToken || !session)
+    return Response.json({
+      status: 401,
+      data: { error: 'Token expired or no session' },
+    })
 
   const response = await api('/api/v1/brands', {
     method: 'POST',
