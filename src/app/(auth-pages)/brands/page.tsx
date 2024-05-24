@@ -16,7 +16,6 @@ export default async function BrandsPage() {
             </Button>
           </Link>
         </div>
-
         <BrandsList />
       </div>
     </main>

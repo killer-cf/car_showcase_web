@@ -83,7 +83,7 @@ export default function SignUpPage() {
       return
     }
 
-    const res = await api('/api/v1/users', {
+    await api('/api/v1/users', {
       method: 'POST',
       headers: {
         'Content-Type': 'application/json',

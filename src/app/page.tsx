@@ -11,13 +11,6 @@ import { HomeFilters } from '@/components/home-filters'
 import CarImage from '../../public/car.webp'
 
 export default async function Home() {
-  const queryClient = new QueryClient()
-
-  await queryClient.prefetchQuery({
-    queryKey: ['brands'],
-    queryFn: async () => fetchBrands(),
-  })
-
   return (
     <main className="flex flex-col">
       <div className="bg-[#29302F] w-full h-[500px]">
@@ -47,9 +40,7 @@ export default async function Home() {
             </div>
           </div>
 
-          <HydrationBoundary state={dehydrate(queryClient)}>
-            <HomeFilters />
-          </HydrationBoundary>
+          <HomeFilters />
         </div>
       </div>
     </main>

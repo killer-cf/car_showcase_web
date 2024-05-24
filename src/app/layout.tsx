@@ -1,11 +1,16 @@
 import './globals.css'
-import 'react-toastify/dist/ReactToastify.css'
 
+import {
+  dehydrate,
+  HydrationBoundary,
+  QueryClient,
+} from '@tanstack/react-query'
 import type { Metadata } from 'next'
 import { Inter as FontSans } from 'next/font/google'
 import localFont from 'next/font/local'
-import { ToastContainer } from 'react-toastify'
 
+import { fetchBrands } from '@/actions/fetch-brands'
+import { getAuthenticatedUser } from '@/actions/user'
 import { Header } from '@/components/header'
 import { cn } from '@/lib/utils'
 
@@ -43,11 +48,25 @@ export const metadata: Metadata = {
   description: 'The best place to buy and sell cars',
 }
 
-export default function RootLayout({
+export default async function RootLayout({
   children,
 }: Readonly<{
   children: React.ReactNode
 }>) {
+  const queryClient = new QueryClient()
+
+  const { success } = await queryClient.fetchQuery({
+    queryKey: ['user'],
+    queryFn: getAuthenticatedUser,
+  })
+
+  await queryClient.prefetchQuery({
+    queryKey: ['brands'],
+    queryFn: async () => fetchBrands(),
+  })
+
+  const isSuper = success?.user.role === 'SUPER'
+
   return (
     <html lang="pt-BR">
       <body
@@ -59,22 +78,10 @@ export default function RootLayout({
       >
         <Providers>
           <div>
-            <Header />
-            {children}
-          </div>
-          <div className="absolute top-0 right-0 ">
-            <ToastContainer
-              position="top-right"
-              autoClose={5000}
-              hideProgressBar={false}
-              newestOnTop={false}
-              closeOnClick
-              rtl={false}
-              pauseOnFocusLoss
-              draggable
-              pauseOnHover
-              theme="dark"
-            />
+            <Header isSuper={isSuper} />
+            <HydrationBoundary state={dehydrate(queryClient)}>
+              {children}
+            </HydrationBoundary>
           </div>
         </Providers>
       </body>
