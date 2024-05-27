@@ -1,20 +1,16 @@
 import { revalidatePath } from 'next/cache'
 import { redirect } from 'next/navigation'
 
-import { createClient } from '@/utils/supabase/server'
+import { getAuthenticatedUser } from '@/actions/user'
 
 export default async function AuthLayout({
   children,
 }: {
   children: React.ReactNode
 }) {
-  const supabase = createClient()
+  const { success } = await getAuthenticatedUser()
 
-  const {
-    data: { user },
-  } = await supabase.auth.getUser()
-
-  if (!user) {
+  if (!success) {
     revalidatePath('/')
     redirect('/')
   }

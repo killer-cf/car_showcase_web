@@ -1,11 +1,5 @@
-import {
-  dehydrate,
-  HydrationBoundary,
-  QueryClient,
-} from '@tanstack/react-query'
 import Image from 'next/image'
 
-import { fetchBrands } from '@/actions/fetch-brands'
 import { HomeFilters } from '@/components/home-filters'
 
 import CarImage from '../../public/car.webp'

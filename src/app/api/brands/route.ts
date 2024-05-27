@@ -7,9 +7,9 @@ import { getToken } from '@/utils/get-token'
 export async function POST(request: NextRequest) {
   const data = await request.json()
 
-  const { accessToken, session } = await getToken()
+  const { accessToken } = await getToken()
 
-  if (!accessToken || !session)
+  if (!accessToken)
     return Response.json({
       status: 401,
       data: { error: 'Token expired or no session' },

@@ -12,6 +12,7 @@ interface AuthenticatedUserActionResponse {
 }
 
 export async function getAuthenticatedUser(): Promise<AuthenticatedUserActionResponse> {
+  console.log('getAuthenticatedUser')
   try {
     const supabase = createClient()
     const {
