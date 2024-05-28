@@ -1,4 +1,5 @@
 import { AES, enc } from 'crypto-js'
+
 import { env } from '@/env'
 
 export function encrypt(text: string) {

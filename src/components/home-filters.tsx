@@ -1,12 +1,12 @@
 'use client'
 
 import { useRouter } from 'next/navigation'
-import { useCallback, useEffect, useState } from 'react'
+import { useCallback, useState } from 'react'
 
 import { SelectOptions } from '@/components/select-options'
 import { Button } from '@/components/ui/button'
-import { Brand } from '@/data/types/brand'
-import { Model } from '@/data/types/model'
+import { useFetchBrandModels } from '@/hooks/use-fetch-brand-models'
+import { useFetchBrands } from '@/hooks/use-fetch-brands'
 import { brStates } from '@/utils/br-states'
 import { carStatus } from '@/utils/car-status'
 import { prices } from '@/utils/get-prices'
@@ -15,18 +15,26 @@ export function HomeFilters() {
   const router = useRouter()
   const [searchParams, setSearchParams] = useState(new URLSearchParams())
   const [path, setPath] = useState('/cars')
-  const [brands, setBrands] = useState<Brand[]>([])
-  const [models, setModels] = useState<Model[]>([])
+  const brandOnSearch = searchParams.get('brand')
 
-  const brandsForSelect = brands.map((brand) => ({
-    key: brand.name,
-    value: brand.name,
-  }))
+  const { data: brandData } = useFetchBrands()
+  const brands = brandData?.brands
+  const brandId = brands?.find((brand) => brand.name === brandOnSearch)?.id
 
-  const modelsForSelect = models.map((model) => ({
-    key: model.name,
-    value: model.name,
-  }))
+  const { data: modelData } = useFetchBrandModels(brandId)
+  const models = modelData?.models
+
+  const brandsForSelect =
+    brands?.map((brand) => ({
+      key: brand.name,
+      value: brand.name,
+    })) || []
+
+  const modelsForSelect =
+    models?.map((model) => ({
+      key: model.name,
+      value: model.name,
+    })) || []
 
   const updateQueryString = useCallback(
     (name: string, value: string) => {
@@ -46,46 +54,6 @@ export function HomeFilters() {
   function handleSelectChange(name: string, value: string) {
     updateQueryString(name, value)
   }
-
-  const getBrands = async () => {
-    try {
-      const response = await fetch('/api/brands')
-      if (response) {
-        const json = await response.json()
-        setBrands(json.data.brands)
-      }
-    } catch (error) {
-      console.log(error)
-    }
-  }
-
-  const getModels = async (brandId: string) => {
-    try {
-      const response = await fetch(`/api/brands/${brandId}/models`)
-      if (response) {
-        const json = await response.json()
-        console.log(json)
-        setModels(json.data.models)
-      }
-    } catch (error) {
-      console.log(error)
-    }
-  }
-
-  const brandOnSearch = searchParams.get('brand')
-
-  useEffect(() => {
-    getBrands()
-  }, [])
-
-  useEffect(() => {
-    if (brands.length > 0 && brandOnSearch) {
-      const brandId = brands.find((brand) => brand.name === brandOnSearch)?.id
-
-      if (!brandId) return
-      getModels(brandId)
-    }
-  }, [brands, brandOnSearch])
 
   return (
     <div className="filters mt-4">

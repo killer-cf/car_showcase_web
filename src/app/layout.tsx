@@ -1,14 +1,20 @@
 import './globals.css'
 
+import {
+  dehydrate,
+  HydrationBoundary,
+  QueryClient,
+} from '@tanstack/react-query'
 import type { Metadata } from 'next'
 import { Inter as FontSans } from 'next/font/google'
 import localFont from 'next/font/local'
-import { ToastContainer } from 'react-toastify'
 
+import { fetchBrands } from '@/actions/fetch-brands'
+import { getAuthenticatedUser } from '@/actions/user'
 import { Header } from '@/components/header'
 import { cn } from '@/lib/utils'
 
-import SessionProvider from './providers/session-provider'
+import { Providers } from './providers'
 
 const fontSans = FontSans({
   subsets: ['latin'],
@@ -42,41 +48,41 @@ export const metadata: Metadata = {
   description: 'The best place to buy and sell cars',
 }
 
-export default function RootLayout({
+export default async function RootLayout({
   children,
 }: Readonly<{
   children: React.ReactNode
 }>) {
+  const queryClient = new QueryClient()
+
+  const { success } = await queryClient.fetchQuery({
+    queryKey: ['user'],
+    queryFn: getAuthenticatedUser,
+  })
+
+  await queryClient.prefetchQuery({
+    queryKey: ['brands'],
+    queryFn: async () => fetchBrands(),
+  })
+
   return (
     <html lang="pt-BR">
-      <SessionProvider>
-        <body
-          className={cn(
-            'min-h-screen bg-background font-sans antialiased',
-            fontSans.variable,
-            fontApercu.variable,
-          )}
-        >
+      <body
+        className={cn(
+          'min-h-screen bg-background font-sans antialiased',
+          fontSans.variable,
+          fontApercu.variable,
+        )}
+      >
+        <Providers>
           <div>
-            <Header />
-            {children}
+            <Header user={success?.user} />
+            <HydrationBoundary state={dehydrate(queryClient)}>
+              {children}
+            </HydrationBoundary>
           </div>
-          <div className="absolute top-0 right-0 ">
-            <ToastContainer
-              position="top-right"
-              autoClose={5000}
-              hideProgressBar={false}
-              newestOnTop={false}
-              closeOnClick
-              rtl={false}
-              pauseOnFocusLoss
-              draggable
-              pauseOnHover
-              theme="dark"
-            />
-          </div>
-        </body>
-      </SessionProvider>
+        </Providers>
+      </body>
     </html>
   )
 }

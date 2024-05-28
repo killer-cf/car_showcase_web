@@ -1,18 +1,19 @@
 import { revalidateTag } from 'next/cache'
+import { NextRequest } from 'next/server'
 
-import { getAccessToken } from '@/data/actions/get-access-token'
 import { api } from '@/data/api'
+import { getToken } from '@/utils/get-token'
 
-export async function POST(request: Request) {
+export async function POST(request: NextRequest) {
   const data = await request.json()
 
-  console.log(data)
+  const { accessToken } = await getToken()
 
-  const accessToken = await getAccessToken()
-
-  if (!accessToken) {
-    return Response.json({ status: 401 })
-  }
+  if (!accessToken)
+    return Response.json({
+      status: 401,
+      data: { error: 'Token expired or no session' },
+    })
 
   const response = await api('/api/v1/brands', {
     method: 'POST',
@@ -31,7 +32,11 @@ export async function POST(request: Request) {
 }
 
 export async function GET() {
-  const response = await api('/api/v1/brands').then((res) => res.json())
+  const response = await api('/api/v1/brands', {
+    next: {
+      revalidate: 60 * 60 * 24,
+    },
+  }).then((res) => res.json())
 
   return Response.json(response)
 }

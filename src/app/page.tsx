@@ -4,7 +4,7 @@ import { HomeFilters } from '@/components/home-filters'
 
 import CarImage from '../../public/car.webp'
 
-export default function Home() {
+export default async function Home() {
   return (
     <main className="flex flex-col">
       <div className="bg-[#29302F] w-full h-[500px]">

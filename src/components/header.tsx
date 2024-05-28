@@ -1,11 +1,24 @@
-import { User } from 'lucide-react'
 import Image from 'next/image'
 import Link from 'next/link'
 
+import { User } from '@/data/types/user'
+import { defineAbilityFor } from '@/lib/casl'
+
 import Logo from '../../public/logo_size.jpg'
+import { Auth } from './auth'
 import { Button } from './ui/button'
 
-export function Header() {
+interface HeaderProps {
+  user?: User
+}
+
+export async function Header({ user }: HeaderProps) {
+  let canManagerBrands = false
+  if (user) {
+    const ability = defineAbilityFor(user)
+    canManagerBrands = ability.can('manage', 'Brand')
+  }
+
   return (
     <header className="flex items-center bg-background max-w-6xl m-auto">
       <Image src={Logo} width={70} height={70} alt="logo" />
@@ -17,14 +30,14 @@ export function Header() {
           <Button variant="link" className="text-md">
             <Link href={'/cars'}>Carros a venda</Link>
           </Button>
+          {canManagerBrands && (
+            <Button variant="link" className="text-md">
+              <Link href={'/brands'}>Marcas</Link>
+            </Button>
+          )}
         </div>
 
-        <div>
-          <Button variant="link" className="text-md gap-1">
-            <User className="w-5 h-5" />
-            <Link href={'/login'}>Login</Link>
-          </Button>
-        </div>
+        <Auth />
       </nav>
     </header>
   )
