@@ -65,8 +65,6 @@ export default async function RootLayout({
     queryFn: async () => fetchBrands(),
   })
 
-  const isSuper = success?.user.role === 'SUPER'
-
   return (
     <html lang="pt-BR">
       <body
@@ -78,7 +76,7 @@ export default async function RootLayout({
       >
         <Providers>
           <div>
-            <Header isSuper={isSuper} />
+            <Header user={success?.user} />
             <HydrationBoundary state={dehydrate(queryClient)}>
               {children}
             </HydrationBoundary>
